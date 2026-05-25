@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TravelXP — Pristine Pearl Pharma</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#f0f2f8;--surface:#fff;--card:#fff;--card2:#f5f7fc;
+  --border:#e4e8f0;--border2:#cdd3e8;
+  --ink:#0a0e1a;--ink2:#3a4060;--muted:#7a84aa;
+  --accent:#1a56db;--accent-g:linear-gradient(135deg,#1a56db 0%,#3b82f6 100%);
+  --accent-glow:rgba(26,86,219,.18);
+  --green:#059669;--red:#dc2626;--amber:#d97706;--purple:#7c3aed;--teal:#0891b2;--rose:#e11d48;
+  --sh1:0 1px 4px rgba(10,14,26,.06),0 1px 2px rgba(10,14,26,.04);
+  --sh2:0 4px 20px rgba(10,14,26,.09),0 2px 6px rgba(10,14,26,.05);
+  --sh3:0 20px 60px rgba(10,14,26,.16);
+  --r:14px;--rs:9px;--sidebar:240px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'Outfit',sans-serif;min-height:100vh;font-size:14px;}
+::selection{background:#dbeafe;color:#1e40af;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:#cdd3e8;border-radius:4px;}
+
+/* SIDEBAR */
+#sidebar{width:var(--sidebar);min-width:var(--sidebar);background:#0a0e1a;height:100vh;position:sticky;top:0;overflow-y:auto;display:flex;flex-direction:column;z-index:50;box-shadow:4px 0 28px rgba(10,14,26,.18);}
+.sb-logo{padding:20px 16px 16px;display:flex;align-items:center;gap:11px;border-bottom:1px solid rgba(255,255,255,.07);}
+.sb-mark{width:38px;height:38px;border-radius:11px;background:var(--accent-g);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 4px 16px rgba(26,86,219,.45);}
+.sb-brand{font-family:'Fraunces',serif;font-weight:700;font-size:15.5px;color:#fff;line-height:1.2;}
+.sb-org{font-size:9px;color:rgba(255,255,255,.3);font-weight:500;letter-spacing:.04em;margin-top:1px;}
+.sb-sec{padding:16px 16px 5px;font-size:9px;color:rgba(255,255,255,.22);font-weight:700;letter-spacing:.14em;text-transform:uppercase;}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px 8px 13px;margin:1px 8px;border-radius:9px;cursor:pointer;color:rgba(255,255,255,.48);font-size:13px;font-weight:500;transition:all .15s;}
+.sb-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85);}
+.sb-item.active{background:var(--accent-g);color:#fff;box-shadow:0 4px 16px rgba(26,86,219,.38);}
+.sb-item .ico{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.07);font-size:13px;flex-shrink:0;transition:all .15s;}
+.sb-item.active .ico{background:rgba(255,255,255,.2);}
+.sb-badge{margin-left:auto;background:rgba(255,255,255,.13);color:rgba(255,255,255,.7);padding:1px 7px;border-radius:99px;font-size:10px;font-weight:700;}
+.sb-item.active .sb-badge{background:rgba(255,255,255,.24);}
+.sb-footer{padding:10px 10px 12px;border-top:1px solid rgba(255,255,255,.07);margin-top:auto;}
+.sb-sync-btn{display:flex;align-items:center;gap:7px;padding:9px 14px;border-radius:9px;background:rgba(255,255,255,.08);color:rgba(255,255,255,.65);font-size:12px;font-weight:600;cursor:pointer;border:none;width:100%;justify-content:center;font-family:'Outfit',sans-serif;transition:all .15s;}
+.sb-sync-btn:hover{background:rgba(255,255,255,.13);color:#fff;}
+.sb-time{font-size:10px;color:rgba(255,255,255,.26);text-align:center;margin-top:5px;}
+
+/* MAIN */
+main{flex:1;overflow:auto;padding:26px 28px;min-width:0;}
+.page{display:none;}
+.page.active{display:block;animation:fadeUp .22s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:none;}}
+
+/* PAGE HEADER */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.ph-title{font-family:'Fraunces',serif;font-size:25px;font-weight:700;color:var(--ink);}
+.ph-sub{font-size:12px;color:var(--muted);font-weight:500;margin-top:2px;}
+.ph-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;box-shadow:var(--sh1);}
+.card-title{font-family:'Fraunces',serif;font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:7px;}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* HERO */
+.hero{border-radius:var(--r);padding:26px 28px;margin-bottom:20px;position:relative;overflow:hidden;background:#0a0e1a;color:#fff;box-shadow:var(--sh2);}
+.hero::before{content:'';position:absolute;right:-60px;top:-60px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,.24) 0%,transparent 70%);}
+.hero::after{content:'';position:absolute;left:40%;bottom:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(26,86,219,.2) 0%,transparent 70%);}
+.hero-inner{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+.hero-lbl{font-size:10px;font-weight:700;opacity:.4;letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px;}
+.hero-big{font-family:'Fraunces',serif;font-size:56px;font-weight:700;line-height:1;letter-spacing:-.02em;}
+.hero-desc{font-size:12px;opacity:.45;font-weight:500;margin-top:3px;}
+.hero-stats{display:flex;gap:30px;flex-wrap:wrap;}
+.hero-stat-val{font-family:'Fraunces',serif;font-size:28px;font-weight:700;}
+.hero-stat-lbl{font-size:9px;opacity:.4;font-weight:600;margin-top:1px;text-transform:uppercase;letter-spacing:.06em;}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;margin-bottom:20px;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 18px 14px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s;box-shadow:var(--sh1);}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--sh2);}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kpi-col,var(--accent));}
+.kpi-ic{font-size:22px;margin-bottom:8px;display:block;}
+.kpi-lbl{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;}
+.kpi-val{font-family:'Fraunces',serif;font-size:26px;font-weight:700;line-height:1;color:var(--ink);}
+.kpi-sub{font-size:10.5px;color:var(--muted);font-weight:500;margin-top:4px;}
+.kpi-delta{font-size:10.5px;font-weight:700;margin-top:4px;}
+.kpi-delta.pos{color:var(--green);}.kpi-delta.neg{color:var(--red);}
+
+/* FY BAR */
+.fy-bar{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-bottom:16px;}
+.fy-chip{padding:5px 13px;border-radius:99px;font-size:11.5px;font-weight:600;cursor:pointer;border:1.5px solid var(--border2);background:var(--card);color:var(--ink2);transition:all .15s;}
+.fy-chip:hover:not(.active){background:var(--card2);border-color:var(--accent);}
+.fy-chip.active{background:var(--accent-g);border-color:transparent;color:#fff;box-shadow:0 3px 10px var(--accent-glow);}
+
+/* TABLES */
+.tbl-wrap{overflow:auto;border-radius:var(--r);border:1px solid var(--border);}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+.tbl th{background:#f8f9fd;color:var(--ink2);font-weight:700;padding:10px 13px;text-align:left;position:sticky;top:0;z-index:10;border-bottom:2px solid var(--border);white-space:nowrap;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;}
+.tbl td{padding:9px 13px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap;}
+.tbl tbody tr{transition:background .1s;}
+.tbl tbody tr:hover td{background:#eff6ff;}
+.tbl tbody tr:last-child td{border-bottom:none;}
+.tbl .tot-row td{background:#eef2ff!important;font-weight:700;border-top:2px solid #c7d2fe;}
+.clickable-row{cursor:pointer;}
+.tbl th.sortable{cursor:pointer;user-select:none;}
+.tbl th.sortable:hover{color:var(--accent);}
+.sort-asc::after{content:'↑';margin-left:4px;color:var(--accent);}
+.sort-desc::after{content:'↓';margin-left:4px;color:var(--accent);}
+
+/* AMOUNTS */
+.a-ta{color:var(--accent);font-family:'DM Mono',monospace;font-weight:500;font-size:12px;}
+.a-ded{color:var(--red);font-family:'DM Mono',monospace;font-weight:500;font-size:12px;}
+.a-paid{color:var(--green);font-family:'DM Mono',monospace;font-weight:500;font-size:12px;}
+.a-zero{color:var(--muted);font-family:'DM Mono',monospace;font-size:11px;}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:99px;font-size:10px;font-weight:700;white-space:nowrap;}
+.bg-blue{background:#dbeafe;color:#1e40af;}.bg-green{background:#d1fae5;color:#065f46;}
+.bg-red{background:#fee2e2;color:#991b1b;}.bg-amber{background:#fef3c7;color:#92400e;}
+.bg-purple{background:#ede9fe;color:#4c1d95;}.bg-teal{background:#ccfbf1;color:#134e4a;}
+.bg-gray{background:#f3f4f6;color:#374151;}.bg-indigo{background:#e0e7ff;color:#3730a3;}
+.bg-pink{background:#fce7f3;color:#831843;}.bg-orange{background:#ffedd5;color:#9a3412;}
+
+/* AVATAR */
+.av{border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;font-family:'Outfit',sans-serif;font-size:11px;}
+.av-0{background:#dbeafe;color:#1e40af;}.av-1{background:#d1fae5;color:#065f46;}
+.av-2{background:#fef3c7;color:#92400e;}.av-3{background:#ede9fe;color:#4c1d95;}
+.av-4{background:#fee2e2;color:#991b1b;}.av-5{background:#ccfbf1;color:#134e4a;}
+.av-6{background:#e0e7ff;color:#3730a3;}.av-7{background:#fce7f3;color:#831843;}
+
+/* INPUTS / BUTTONS */
+.inp{background:var(--card);border:1.5px solid var(--border2);color:var(--ink);border-radius:var(--rs);padding:7px 11px;font-size:13px;outline:none;font-family:'Outfit',sans-serif;transition:all .15s;width:100%;}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+.inp::placeholder{color:var(--muted);}
+select.inp option{background:var(--card2);}
+.inp-lbl{font-size:11px;color:var(--ink2);font-weight:600;margin-bottom:4px;display:block;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:var(--rs);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:'Outfit',sans-serif;white-space:nowrap;}
+.btn-primary{background:var(--accent-g);color:#fff;box-shadow:0 2px 8px var(--accent-glow);}
+.btn-primary:hover{box-shadow:0 4px 18px var(--accent-glow);transform:translateY(-1px);}
+.btn-ghost{background:var(--card);border:1.5px solid var(--border2);color:var(--ink2);}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-excel{background:linear-gradient(135deg,#166534,#16a34a);color:#fff;}
+.btn-excel:hover{transform:translateY(-1px);}
+.btn-danger{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;}
+.btn-sm{padding:4px 9px;font-size:12px;}
+.btn-amber{background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;}
+.btn-rose{background:linear-gradient(135deg,#e11d48,#f43f5e);color:#fff;}
+
+/* CHART HEIGHT CLASSES */
+.ch-md{min-height:220px;}
+.ch-lg{min-height:280px;}
+.ch-xl{min-height:320px;}
+
+/* STATS STRIP */
+.stats-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+.stat-cell{background:var(--card2);padding:12px;text-align:center;}
+.stat-cell-val{font-family:'Fraunces',serif;font-size:18px;font-weight:700;}
+.stat-cell-lbl{font-size:9.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:2px;}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(10,14,26,.58);z-index:1000;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);animation:fadein .18s ease;}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:20px;width:94%;max-width:900px;max-height:92vh;overflow-y:auto;box-shadow:var(--sh3);animation:scalein .2s ease;}
+.modal-box-sm{max-width:540px;}
+.modal-box-lg{max-width:1100px;}
+.modal-hdr{padding:22px 26px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;}
+.modal-body{padding:22px 26px;}
+@keyframes fadein{from{opacity:0;}to{opacity:1;}}
+@keyframes scalein{from{opacity:0;transform:scale(.96);}to{opacity:1;transform:none;}}
+.modal-close{background:var(--bg);border:1px solid var(--border);cursor:pointer;font-size:15px;width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+
+/* BREAKDOWN */
+.bk-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:16px;}
+.bk-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:13px;text-align:center;}
+.bk-val{font-family:'Fraunces',serif;font-size:21px;font-weight:700;line-height:1;}
+.bk-lbl{font-size:9px;color:var(--muted);font-weight:700;margin-top:3px;text-transform:uppercase;letter-spacing:.06em;}
+
+/* PBAR */
+.pbar{background:var(--border);border-radius:99px;overflow:hidden;}
+.pbar-fill{border-radius:99px;transition:width .4s ease;}
+
+/* SEARCH */
+.sw{position:relative;flex:1;max-width:240px;}
+.sw .si{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:12px;pointer-events:none;}
+.sw .inp{padding-left:29px;}
+
+/* CODE */
+.code-blk{background:#0a0e1a;border:1px solid #1e2433;border-radius:12px;padding:20px;overflow-x:auto;font-family:'DM Mono',monospace;font-size:11px;color:#c9d3e8;line-height:1.75;white-space:pre;}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:7px;}
+.toast-item{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:10px 14px;font-size:12.5px;min-width:220px;animation:slideup .26s ease;box-shadow:var(--sh2);font-weight:600;}
+@keyframes slideup{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* LOADING */
+#loadOv{position:fixed;inset:0;background:rgba(240,242,248,.94);z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spinner{width:40px;height:40px;border:3px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .75s linear infinite;}
+
+/* COMPARE PANEL */
+.compare-bar{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+
+/* TABS */
+.tab-strip{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:14px;}
+.tab-btn{padding:8px 16px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--muted);border:none;background:none;font-family:'Outfit',sans-serif;transition:all .15s;border-bottom:2px solid transparent;margin-bottom:-2px;}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
+
+/* INSIGHT CARDS */
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:16px;}
+.insight-card{background:linear-gradient(135deg,var(--i-c1),var(--i-c2));border-radius:12px;padding:14px 16px;color:#fff;}
+.insight-val{font-family:'Fraunces',serif;font-size:22px;font-weight:700;}
+.insight-lbl{font-size:10px;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.07em;margin-top:2px;}
+.insight-sub{font-size:11px;opacity:.65;margin-top:3px;}
+
+/* HEATMAP */
+.heatmap-wrap{overflow-x:auto;}
+.heatmap{border-collapse:collapse;font-size:10px;min-width:600px;}
+.heatmap th{padding:4px 8px;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;background:var(--card2);position:sticky;top:0;}
+.heatmap td{padding:5px 8px;text-align:center;font-family:'DM Mono',monospace;font-size:10.5px;border:1px solid var(--border);}
+.hm-0{background:#f8faff;color:var(--muted);}
+.hm-1{background:#dbeafe;color:#1e40af;}
+.hm-2{background:#bfdbfe;color:#1d4ed8;}
+.hm-3{background:#93c5fd;color:#1e3a8a;}
+.hm-4{background:#3b82f6;color:#fff;}
+.hm-5{background:#1d4ed8;color:#fff;}
+
+/* TREND SPARKLINES */
+.sparkline{display:inline-block;vertical-align:middle;}
+
+@media(max-width:900px){#sidebar{display:none;}main{padding:12px;}.bk-grid{grid-template-columns:1fr 1fr;}.hero-big{font-size:38px;}}
+</style>
+</head>
+<body>
+<div id="gasUrl" data-url="https://script.google.com/macros/s/AKfycbzv45ljpxos0hYFwDvt6b6fLKJWY5u7qqKL7V_6Ripayevenikafq5KDUwUW-9Qwrrn/exec" style="display:none"></div>
+<div style="display:flex;min-height:100vh;">
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sb-logo">
+    <div class="sb-mark">✈️</div>
+    <div><div class="sb-brand">TravelXP</div><div class="sb-org">Pristine Pearl Pharma PVT LTD</div></div>
+  </div>
+  <nav style="flex:1;padding:6px 0;overflow-y:auto;">
+    <div class="sb-sec">Overview</div>
+    <div class="sb-item active" onclick="navigate('dashboard')"><div class="ico">📊</div>Dashboard</div>
+    <div class="sb-item" onclick="navigate('insights')"><div class="ico">💡</div>Insights</div>
+    <div class="sb-sec">People</div>
+    <div class="sb-item" onclick="navigate('active')"><div class="ico">✅</div>Active Employees<span class="sb-badge" id="nav-active-count"></span></div>
+    <div class="sb-item" onclick="navigate('resigned')"><div class="ico">🚪</div>Resigned<span class="sb-badge" id="nav-res-count"></span></div>
+    <div class="sb-item" onclick="navigate('compare')"><div class="ico">⚖️</div>Compare Employees</div>
+    <div class="sb-sec">Reports</div>
+    <div class="sb-item" onclick="navigate('rpt-team')"><div class="ico">🏷️</div>Team Report</div>
+    <div class="sb-item" onclick="navigate('rpt-monthly')"><div class="ico">📅</div>Monthly Report</div>
+    <div class="sb-item" onclick="navigate('rpt-desig')"><div class="ico">🎯</div>Designation Report</div>
+    <div class="sb-item" onclick="navigate('heatmap')"><div class="ico">🌡️</div>Heatmap</div>
+    <div class="sb-sec">Tools</div>
+    <div class="sb-item" onclick="navigate('upload')"><div class="ico">📥</div>Upload Excel</div>
+    <div class="sb-item" onclick="navigate('export')"><div class="ico">📤</div>Export</div>
+    <div class="sb-item" onclick="navigate('gascode')"><div class="ico">⚙️</div>Apps Script</div>
+  </nav>
+  <div class="sb-footer">
+    <button class="sb-sync-btn" onclick="loadFromGAS()">🔄 Refresh from Sheet</button>
+    <div id="lastSync" class="sb-time">Not synced</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main>
+<div id="loadOv" style="display:none;"><div class="spinner"></div><div style="font-family:'Fraunces',serif;font-size:14px;font-weight:700;color:var(--ink2);">Loading data…</div></div>
+
+<!-- ══ DASHBOARD ══ -->
+<div id="page-dashboard" class="page active">
+  <div class="ph">
+    <div><div class="ph-title">Travel Expense Dashboard</div><div class="ph-sub" id="dash-date"></div></div>
+    <div class="ph-actions">
+      <button class="btn btn-ghost btn-sm" onclick="navigate('insights')">💡 Insights</button>
+      <button class="btn btn-ghost btn-sm" onclick="navigate('export')">📤 Export</button>
+      <button class="btn btn-primary btn-sm" onclick="loadFromGAS()">🔄 Refresh</button>
+    </div>
+  </div>
+  <div class="fy-bar">
+    <span style="font-size:10.5px;font-weight:700;color:var(--muted);">Period:</span>
+    <div class="fy-chip active" onclick="setFY('all',this)">All Time</div>
+    <div class="fy-chip" onclick="setFY('current',this)">Current FY</div>
+    <div id="fy-opts" style="display:flex;gap:5px;flex-wrap:wrap;"></div>
+    <div class="fy-chip" onclick="setFY('custom',this)">Custom</div>
+  </div>
+  <div id="custom-range" style="display:none;margin-bottom:14px;align-items:center;gap:10px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:12px;font-weight:600;color:var(--ink2);">From</span><input type="month" class="inp" id="custom-from" style="width:148px;" onchange="renderDashboard()"/></div>
+    <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:12px;font-weight:600;color:var(--ink2);">To</span><input type="month" class="inp" id="custom-to" style="width:148px;" onchange="renderDashboard()"/></div>
+  </div>
+  <div class="hero">
+    <div class="hero-inner">
+      <div><div class="hero-lbl" id="hero-lbl">Total TA Claim</div><div class="hero-big" id="hero-total">—</div><div class="hero-desc">Sales &amp; Product teams · Paid + Deductions</div></div>
+      <div class="hero-stats" id="hero-stats"></div>
+    </div>
+  </div>
+  <div class="kpi-grid" id="dash-kpis"></div>
+
+  <!-- Row 1: Trend + Donut -->
+  <div style="display:grid;grid-template-columns:3fr 2fr;gap:14px;margin-bottom:14px;">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--accent);"></span>Monthly TA Trend (Paid vs Deduction)</div>
+      <div id="chart-trend" class="ch-lg"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--amber);"></span>Team Distribution</div>
+      <div id="chart-team-pie" class="ch-lg"></div>
+    </div>
+  </div>
+
+  <!-- Row 2: Team bars + split -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--green);"></span>Team Wise TA Claim</div>
+      <div id="chart-team-bar" class="ch-md"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--purple);"></span>Paid vs Deduction by Team</div>
+      <div id="chart-team-split" class="ch-md"></div>
+    </div>
+  </div>
+
+  <!-- Row 3: Top 10 + Designation -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--green);"></span>Top 10 Employees by TA Claim</div>
+      <div id="chart-top-emp"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--teal);"></span>Designation Wise Breakdown</div>
+      <div id="chart-desig"></div>
+    </div>
+  </div>
+
+  <!-- Row 4: Quarter chart + HQ -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--rose);"></span>Quarterly TA Trend</div>
+      <div id="chart-quarterly" class="ch-md"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--amber);"></span>HQ / Location Wise TA</div>
+      <div id="chart-hq" class="ch-md"></div>
+    </div>
+  </div>
+
+  <!-- Row 5: Split + Headcount -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--red);"></span>Paid vs Deduction Split</div>
+      <div id="chart-split" style="min-height:140px;"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--amber);"></span>Active vs Resigned by Team</div>
+      <div id="chart-headcount" style="min-height:140px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ INSIGHTS ══ -->
+<div id="page-insights" class="page">
+  <div class="ph"><div><div class="ph-title">💡 Insights & Analytics</div><div class="ph-sub">Auto-generated observations from your data</div></div>
+    <div class="ph-actions">
+      <select class="inp" id="ins-fy" onchange="renderInsights()" style="width:130px;"></select>
+    </div>
+  </div>
+  <div class="insight-grid" id="ins-cards"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--accent);"></span>Month-over-Month Growth</div><div id="ins-mom" class="ch-lg"></div></div>
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--purple);"></span>Avg TA per Employee by Team</div><div id="ins-avg-team" class="ch-lg"></div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--green);"></span>Top & Bottom 5 Employees</div><div id="ins-top-bot"></div></div>
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--amber);"></span>Deduction Rate by Team</div><div id="ins-ded-rate" class="ch-md"></div></div>
+  </div>
+</div>
+
+<!-- ══ ACTIVE EMPLOYEES ══ -->
+<div id="page-active" class="page">
+  <div class="ph">
+    <div><div class="ph-title">✅ Active Employees</div><div class="ph-sub" id="active-sub"></div></div>
+    <div class="ph-actions">
+      <div class="sw"><span class="si">🔍</span><input class="inp" id="active-search" placeholder="Search…" oninput="renderActive()"/></div>
+      <select class="inp" id="active-team" onchange="renderActive()" style="width:140px;"><option value="">All Teams</option></select>
+      <select class="inp" id="active-desig" onchange="renderActive()" style="width:145px;"><option value="">All Designations</option></select>
+      <select class="inp" id="active-hq" onchange="renderActive()" style="width:130px;"><option value="">All HQs</option></select>
+      <select class="inp" id="active-fy" onchange="renderActive()" style="width:130px;"></select>
+      <select class="inp" id="active-sort" onchange="renderActive()" style="width:140px;">
+        <option value="ta-desc">TA: High→Low</option>
+        <option value="ta-asc">TA: Low→High</option>
+        <option value="name-asc">Name A→Z</option>
+        <option value="name-desc">Name Z→A</option>
+        <option value="months-desc">Months: Most</option>
+      </select>
+      <button class="btn btn-excel" onclick="exportEmpXLSX('active')">📥 Excel</button>
+    </div>
+  </div>
+  <div id="active-summary-strip" class="stats-strip" style="max-width:500px;margin-bottom:12px;"></div>
+  <div class="tbl-wrap" style="max-height:70vh;">
+    <table class="tbl">
+      <thead><tr>
+        <th>#</th><th>Team</th><th>Emp ID</th><th>Name</th><th>Designation</th><th>HQ</th>
+        <th class="sortable" onclick="sortActive('ta')">Total TA</th>
+        <th class="sortable" onclick="sortActive('ded')">Deduction</th>
+        <th class="sortable" onclick="sortActive('paid')">Paid</th>
+        <th>Ded %</th><th>Months</th><th>Last Month</th><th>Trend</th><th>Actions</th>
+      </tr></thead>
+      <tbody id="active-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ RESIGNED EMPLOYEES ══ -->
+<div id="page-resigned" class="page">
+  <div class="ph">
+    <div><div class="ph-title">🚪 Resigned Employees</div><div class="ph-sub" id="res-sub"></div></div>
+    <div class="ph-actions">
+      <div class="sw"><span class="si">🔍</span><input class="inp" id="res-search" placeholder="Search…" oninput="renderResigned()"/></div>
+      <select class="inp" id="res-team" onchange="renderResigned()" style="width:140px;"><option value="">All Teams</option></select>
+      <select class="inp" id="res-desig" onchange="renderResigned()" style="width:140px;"><option value="">All Designations</option></select>
+      <select class="inp" id="res-fy" onchange="renderResigned()" style="width:130px;"></select>
+      <select class="inp" id="res-sort" onchange="renderResigned()" style="width:140px;">
+        <option value="ta-desc">TA: High→Low</option>
+        <option value="ta-asc">TA: Low→High</option>
+        <option value="name-asc">Name A→Z</option>
+        <option value="resign-desc">Resignation: Recent</option>
+      </select>
+      <button class="btn btn-excel" onclick="exportEmpXLSX('resigned')">📥 Excel</button>
+    </div>
+  </div>
+  <div class="tbl-wrap" style="max-height:72vh;">
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Team</th><th>Emp ID</th><th>Name</th><th>Designation</th><th>HQ</th><th>DOJ</th><th>Resignation</th><th>Tenure</th><th>Total TA</th><th>Total Ded</th><th>Total Paid</th><th>Months</th><th>Last Month</th><th>Actions</th></tr></thead>
+      <tbody id="res-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ COMPARE EMPLOYEES ══ -->
+<div id="page-compare" class="page">
+  <div class="ph"><div><div class="ph-title">⚖️ Compare Employees</div><div class="ph-sub">Side-by-side TA analysis</div></div></div>
+  <div class="compare-bar">
+    <div style="flex:1;min-width:180px;">
+      <label class="inp-lbl">Employee 1</label>
+      <select class="inp" id="cmp-emp1" onchange="renderCompare()"><option value="">Select…</option></select>
+    </div>
+    <div style="font-size:20px;font-weight:700;color:var(--muted);padding-top:16px;">vs</div>
+    <div style="flex:1;min-width:180px;">
+      <label class="inp-lbl">Employee 2</label>
+      <select class="inp" id="cmp-emp2" onchange="renderCompare()"><option value="">Select…</option></select>
+    </div>
+    <div style="flex:1;min-width:130px;">
+      <label class="inp-lbl">Period</label>
+      <select class="inp" id="cmp-fy" onchange="renderCompare()"></select>
+    </div>
+  </div>
+  <div id="cmp-result"></div>
+</div>
+
+<!-- ══ TEAM REPORT ══ -->
+<div id="page-rpt-team" class="page">
+  <div class="ph">
+    <div><div class="ph-title">🏷️ Team Wise Report</div></div>
+    <div class="ph-actions">
+      <select class="inp" id="rpt-team-fy" onchange="renderTeamReport()" style="width:130px;"></select>
+      <button class="btn btn-excel" onclick="exportTableXLSX('rpt-team-thead','rpt-team-tbody','Team_Report')">📥 Excel</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--accent);"></span>Team TA Comparison</div><div id="rpt-team-bar" class="ch-lg"></div></div>
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--amber);"></span>Monthly by Team (Top 4)</div><div id="rpt-team-trend" class="ch-lg"></div></div>
+  </div>
+  <div class="tbl-wrap"><table class="tbl"><thead id="rpt-team-thead"></thead><tbody id="rpt-team-tbody"></tbody></table></div>
+</div>
+
+<!-- ══ MONTHLY REPORT ══ -->
+<div id="page-rpt-monthly" class="page">
+  <div class="ph">
+    <div><div class="ph-title">📅 Monthly Report</div></div>
+    <div class="ph-actions">
+      <select class="inp" id="rpt-monthly-fy" onchange="renderMonthlyReport()" style="width:130px;"></select>
+      <select class="inp" id="rpt-monthly-team" onchange="renderMonthlyReport()" style="width:140px;"><option value="">All Teams</option></select>
+      <button class="btn btn-excel" onclick="exportTableXLSX('rpt-monthly-thead','rpt-monthly-tbody','Monthly_Report')">📥 Excel</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:3fr 2fr;gap:14px;margin-bottom:16px;">
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--accent);"></span>Monthly TA Claim</div><div id="rpt-monthly-bar" class="ch-lg"></div></div>
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--green);"></span>Paid vs Ded Monthly</div><div id="rpt-monthly-split" class="ch-lg"></div></div>
+  </div>
+  <div class="tbl-wrap"><table class="tbl"><thead id="rpt-monthly-thead"></thead><tbody id="rpt-monthly-tbody"></tbody></table></div>
+</div>
+
+<!-- ══ DESIGNATION REPORT ══ -->
+<div id="page-rpt-desig" class="page">
+  <div class="ph">
+    <div><div class="ph-title">🎯 Designation Wise Report</div></div>
+    <div class="ph-actions">
+      <select class="inp" id="rpt-desig-fy" onchange="renderDesigReport()" style="width:130px;"></select>
+      <select class="inp" id="rpt-desig-team" onchange="renderDesigReport()" style="width:140px;"><option value="">All Teams</option></select>
+      <button class="btn btn-excel" onclick="exportTableXLSX('rpt-desig-thead','rpt-desig-tbody','Designation_Report')">📥 Excel</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--purple);"></span>Designation TA Comparison</div><div id="rpt-desig-chart" class="ch-lg"></div></div>
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--teal);"></span>Avg TA per Designation</div><div id="rpt-desig-avg" class="ch-lg"></div></div>
+  </div>
+  <div class="tbl-wrap"><table class="tbl"><thead id="rpt-desig-thead"></thead><tbody id="rpt-desig-tbody"></tbody></table></div>
+</div>
+
+<!-- ══ HEATMAP ══ -->
+<div id="page-heatmap" class="page">
+  <div class="ph"><div><div class="ph-title">🌡️ TA Heatmap</div><div class="ph-sub">Monthly TA per employee — darker = higher claim</div></div>
+    <div class="ph-actions">
+      <select class="inp" id="hm-team" onchange="renderHeatmap()" style="width:150px;"><option value="">All Teams</option></select>
+      <select class="inp" id="hm-year" onchange="renderHeatmap()" style="width:110px;"></select>
+      <select class="inp" id="hm-metric" onchange="renderHeatmap()" style="width:120px;">
+        <option value="ta">TA Claim</option>
+        <option value="paid">Paid</option>
+        <option value="ded">Deduction</option>
+      </select>
+      <button class="btn btn-excel" onclick="exportHeatmapXLSX()">📥 Excel</button>
+    </div>
+  </div>
+  <div class="card"><div id="heatmap-content" class="heatmap-wrap"></div></div>
+</div>
+
+<!-- ══ UPLOAD ══ -->
+<div id="page-upload" class="page">
+  <div class="ph"><div><div class="ph-title">📥 Upload Excel</div><div class="ph-sub">Import from Google Sheet export (.xlsx)</div></div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:680px;">
+    <div class="card" style="text-align:center;border:2px dashed var(--border2);" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
+      <div style="font-size:42px;margin-bottom:12px;">📥</div>
+      <p style="font-weight:700;margin:0 0 6px;font-family:'Fraunces',serif;">Drop Excel Here</p>
+      <p style="color:var(--muted);font-size:12px;margin:0 0 14px;">or click to browse</p>
+      <input type="file" id="xl-upload" accept=".xlsx,.xls" style="display:none;" onchange="handleFileUpload(event)"/>
+      <button class="btn btn-primary" onclick="document.getElementById('xl-upload').click()">Browse File</button>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:8px;">📖 Import Guide</div>
+      <ul style="color:var(--muted);font-size:12px;line-height:2.1;padding-left:14px;">
+        <li>Export Google Sheet as .xlsx</li>
+        <li>Required sheets: PAID, DEDUCTION, MANPOWER</li>
+        <li>Employee IDs are primary keys</li>
+        <li>Head Office / Depot teams auto-filtered</li>
+        <li>Existing data will be merged</li>
+      </ul>
+    </div>
+  </div>
+  <div id="upload-preview" style="margin-top:18px;max-width:680px;"></div>
+</div>
+
+<!-- ══ EXPORT ══ -->
+<div id="page-export" class="page">
+  <div class="ph"><div><div class="ph-title">📤 Export</div><div class="ph-sub">Download data in various formats</div></div></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;">
+    <div class="card" style="text-align:center;padding:22px 16px;">
+      <div style="font-size:36px;margin-bottom:10px;">📊</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;font-size:14px;margin-bottom:6px;">Full Excel Export</div>
+      <div id="exp-all-count" style="color:var(--muted);font-size:12px;margin-bottom:12px;"></div>
+      <button class="btn btn-excel" style="width:100%;justify-content:center;" onclick="exportFullXLSX()">Download XLSX</button>
+    </div>
+    <div class="card" style="text-align:center;padding:22px 16px;">
+      <div style="font-size:36px;margin-bottom:10px;">✅</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;font-size:14px;margin-bottom:6px;">Active Employees</div>
+      <div style="color:var(--muted);font-size:12px;margin-bottom:12px;">Consolidated summary</div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="exportEmpXLSX('active')">Download XLSX</button>
+    </div>
+    <div class="card" style="text-align:center;padding:22px 16px;">
+      <div style="font-size:36px;margin-bottom:10px;">🚪</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;font-size:14px;margin-bottom:6px;">Resigned Employees</div>
+      <div style="color:var(--muted);font-size:12px;margin-bottom:12px;">Full TA history</div>
+      <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="exportEmpXLSX('resigned')">Download XLSX</button>
+    </div>
+    <div class="card" style="text-align:center;padding:22px 16px;">
+      <div style="font-size:36px;margin-bottom:10px;">📅</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;font-size:14px;margin-bottom:6px;">Monthly Report</div>
+      <div style="color:var(--muted);font-size:12px;margin-bottom:12px;">All months summary</div>
+      <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="exportMonthlyXLSX()">Download XLSX</button>
+    </div>
+    <div class="card" style="text-align:center;padding:22px 16px;">
+      <div style="font-size:36px;margin-bottom:10px;">🏷️</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;font-size:14px;margin-bottom:6px;">Team Report</div>
+      <div style="color:var(--muted);font-size:12px;margin-bottom:12px;">Team-wise breakdown</div>
+      <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="exportTeamXLSX()">Download XLSX</button>
+    </div>
+    <div class="card" style="text-align:center;padding:22px 16px;">
+      <div style="font-size:36px;margin-bottom:10px;">📁</div>
+      <div style="font-family:'Fraunces',serif;font-weight:700;font-size:14px;margin-bottom:6px;">JSON Backup</div>
+      <div style="color:var(--muted);font-size:12px;margin-bottom:12px;">All raw data</div>
+      <button class="btn btn-ghost" style="width:100%;justify-content:center;" onclick="exportJSON()">Download JSON</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APPS SCRIPT ══ -->
+<div id="page-gascode" class="page">
+  <div class="ph">
+    <div><div class="ph-title">⚙️ Google Apps Script</div><div class="ph-sub">Paste into Extensions → Apps Script in your Google Sheet</div></div>
+    <div class="ph-actions">
+      <button class="btn btn-primary" onclick="copyGASCode()">📋 Copy All</button>
+      <button class="btn btn-ghost" onclick="downloadGASCode()">📥 Download .gs</button>
+    </div>
+  </div>
+  <pre class="code-blk" id="gas-code-block"></pre>
+</div>
+
+</main>
+</div>
+
+<!-- BREAKUP MODAL -->
+<div id="breakup-modal" class="modal-ov" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box modal-box-lg" onclick="event.stopPropagation()">
+    <div class="modal-hdr">
+      <div style="display:flex;align-items:center;gap:13px;">
+        <div id="bu-avatar" class="av" style="width:50px;height:50px;font-size:18px;flex-shrink:0;"></div>
+        <div>
+          <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;" id="bu-name"></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;" id="bu-sub"></div>
+          <div id="bu-badges" style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap;"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:7px;align-items:center;">
+        <button class="btn btn-excel btn-sm" onclick="exportBreakupXLSX()">📥 Excel</button>
+        <button class="modal-close" onclick="document.getElementById('breakup-modal').style.display='none'">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="bk-grid" id="bu-kpis"></div>
+      <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap;">
+        <select class="inp" id="bu-year" onchange="refreshBreakup()" style="width:90px;"></select>
+        <select class="inp" id="bu-view" onchange="refreshBreakup()" style="width:150px;">
+          <option value="monthly">Monthly View</option>
+          <option value="quarterly">Quarterly View</option>
+        </select>
+        <span style="font-size:12px;color:var(--muted);margin-left:auto;">Click a row to see details</span>
+      </div>
+      <div id="bu-mini-chart" style="margin-bottom:14px;"></div>
+      <div class="tbl-wrap"><table class="tbl"><thead id="bu-thead"></thead><tbody id="bu-tbody"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="edit-modal" class="modal-ov" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box modal-box-sm" onclick="event.stopPropagation()">
+    <div class="modal-hdr">
+      <div><div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;">✏️ Edit Employee</div><div id="edit-modal-sub" style="font-size:12px;color:var(--muted);margin-top:2px;"></div></div>
+      <button class="modal-close" onclick="document.getElementById('edit-modal').style.display='none'">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;" id="edit-form-grid"></div>
+      <div style="display:flex;gap:8px;margin-top:18px;justify-content:flex-end;">
+        <button class="btn btn-ghost" onclick="document.getElementById('edit-modal').style.display='none'">Cancel</button>
+        <button class="btn btn-primary" onclick="saveEditEmployee()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  CONSTANTS
+// ═══════════════════════════════════════════════════
+const GAS_URL = document.getElementById('gasUrl').dataset.url;
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const MK = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+const C = ['#1a56db','#059669','#d97706','#dc2626','#7c3aed','#0891b2','#be185d','#047857','#b45309','#4338ca','#6d28d9','#0e7490','#c2410c','#0369a1'];
+const AV_CLS = ['av-0','av-1','av-2','av-3','av-4','av-5','av-6','av-7'];
+const EXCLUDED_TEAMS_PATTERNS = ['head office','headoffice','bangalore depot','regional office','depot'];
+
+let DB = { manpower:[], paid:{}, deduction:{}, meta:{} };
+let breakupEmpId = null, editEmpId = null, currentFY = 'all';
+let activeSortCol = 'ta', activeSortDir = 'desc';
+
+// ═══════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════
+const fmtINRF = v => '₹' + Number(v||0).toLocaleString('en-IN');
+const fmtINRK = v => { const n=Number(v||0); return n>=100000?`₹${(n/100000).toFixed(1)}L`:n>=1000?`₹${Math.round(n/1000)}k`:`₹${n}`; };
+const hash = s => { let h=0; for(let c of (s||'')) h=(h*31+c.charCodeAt(0))|0; return h; };
+const initials = e => (e.empName||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+const avCls = e => AV_CLS[Math.abs(hash(e.empId))%AV_CLS.length];
+const isResigned = e => !!(e.dateOfResignation && String(e.dateOfResignation).trim() && String(e.dateOfResignation).trim() !== '—');
+const safe = e => JSON.stringify(e).replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+const groupBy = (arr,k) => arr.reduce((a,e)=>{const v=typeof k==='function'?k(e):(e[k]||'—');if(!a[v])a[v]=[];a[v].push(e);return a;},{});
+const getPaid = (id,k) => DB.paid[id]?.[k]||0;
+const getDed  = (id,k) => DB.deduction[id]?.[k]||0;
+const getTA   = (id,k) => getPaid(id,k)+getDed(id,k);
+
+function autoShortDesig(fullDesig) {
+  if(!fullDesig||!fullDesig.trim()) return '—';
+  const d=fullDesig.trim();
+  const known={'regional sales manager':'RSM','area sales manager':'ASM','territory sales executive':'TSE','senior medical representative':'SMR','medical representative':'MR','product specialist':'PS','product manager':'PM','senior product manager':'SPM','zonal sales manager':'ZSM','divisional sales manager':'DSM','business development manager':'BDM','key account manager':'KAM','senior representative':'SR','field sales executive':'FSE','sales executive':'SE','senior sales executive':'SSE','area business manager':'ABM','territory business manager':'TBM','deputy manager':'DM','assistant manager':'AM','general manager':'GM','senior manager':'SM','junior manager':'JM','team leader':'TL'};
+  const lc=d.toLowerCase(); if(known[lc]) return known[lc];
+  return d.split(/\s+/).map(w=>w[0]).join('').toUpperCase().slice(0,5);
+}
+function shortDesig(e){ const s=e.shortDesignation; return (s&&s.trim()&&s.trim()!=='—')?s.trim():autoShortDesig(e.designation); }
+
+function fmtDate(raw) {
+  if(!raw||raw==='—'||raw==='') return '—';
+  const s=String(raw).trim();
+  if(/^\d{2}-\d{2}-\d{4}$/.test(s)) return s;
+  if(/^\d{4}-\d{2}-\d{2}/.test(s)){const[y,m,d]=s.slice(0,10).split('-');return `${d}-${m}-${y}`;}
+  const dt=new Date(s); if(!isNaN(dt.getTime())){const d=String(dt.getDate()).padStart(2,'0'),m=String(dt.getMonth()+1).padStart(2,'0'),y=dt.getFullYear();return `${d}-${m}-${y}`;}
+  return s;
+}
+
+function isExcludedTeam(e) {
+  const team=(e.teamWise||'').toLowerCase().trim(), dept=(e.department||'').toLowerCase().trim();
+  if(dept.includes('pmt')||dept.includes('product management')) return false;
+  return EXCLUDED_TEAMS_PATTERNS.some(p=>team.includes(p));
+}
+function getFilteredEmps(includeAll=false){ return DB.manpower.filter(e=>includeAll||!isExcludedTeam(e)); }
+function mkAvatar(e,sz='27px',fs='11px'){ return `<span class="av ${avCls(e)}" style="width:${sz};height:${sz};font-size:${fs};">${initials(e)}</span>`; }
+function toast(msg,type='info'){ const t=document.getElementById('toast'),el=document.createElement('div');el.className='toast-item';el.style.borderLeft=`3px solid ${type==='success'?'var(--green)':type==='error'?'var(--red)':'var(--accent)'}`;el.innerHTML=`${type==='success'?'✅':type==='error'?'❌':'ℹ️'} ${msg}`;t.appendChild(el);setTimeout(()=>el.remove(),3500); }
+function loading(v){ document.getElementById('loadOv').style.display=v?'flex':'none'; }
+
+// Tenure in months between two date strings
+function tenureMonths(doj, dor) {
+  const d1=new Date(doj.split('-').reverse().join('-')), d2=new Date(dor.split('-').reverse().join('-'));
+  if(isNaN(d1)||isNaN(d2)) return '—';
+  const m=(d2.getFullYear()-d1.getFullYear())*12+(d2.getMonth()-d1.getMonth());
+  return m>=12?`${Math.floor(m/12)}y ${m%12}m`:`${m}m`;
+}
+
+// ═══════════════════════════════════════════════════
+//  FINANCIAL YEAR
+// ═══════════════════════════════════════════════════
+function getCurrentFY(){ const now=new Date(),yr=now.getMonth()>=3?now.getFullYear():now.getFullYear()-1; return yr; }
+function getFYKeys(fyStart){ const keys=[]; for(let m=3;m<12;m++) keys.push(`${fyStart}-${MK[m]}`); for(let m=0;m<3;m++) keys.push(`${fyStart+1}-${MK[m]}`); return keys; }
+function getAllKeys(){ const s=new Set(); [...Object.values(DB.paid),...Object.values(DB.deduction)].forEach(m=>Object.keys(m).forEach(k=>s.add(k))); return [...s].sort(); }
+function getFilterKeys(){
+  if(currentFY==='all') return getAllKeys();
+  if(currentFY==='custom'){ const from=document.getElementById('custom-from')?.value, to=document.getElementById('custom-to')?.value; if(!from||!to) return getFYKeys(getCurrentFY()); const keys=[];let[y,m]=from.split('-').map(Number);const[ey,em]=to.split('-').map(Number);while(y<ey||(y===ey&&m<=em)){keys.push(`${y}-${String(m).padStart(2,'0')}`);m++;if(m>12){m=1;y++;}}return keys; }
+  if(currentFY.startsWith('FY')) return getFYKeys(parseInt(currentFY.replace('FY','')));
+  return getFYKeys(getCurrentFY());
+}
+function getFYLabel(){
+  if(currentFY==='all') return 'All Time';
+  if(currentFY==='custom'){ const f=document.getElementById('custom-from')?.value||'',t=document.getElementById('custom-to')?.value||''; return f&&t?`${f} – ${t}`:'Custom'; }
+  const s=currentFY.startsWith('FY')?parseInt(currentFY.replace('FY','')):getCurrentFY();
+  return `FY ${s}-${String(s+1).slice(2)}`;
+}
+function getAvailableFYs(){ const keys=getAllKeys(),fy=new Set(); keys.forEach(k=>{const[y,m]=k.split('-').map(Number);fy.add(m>=4?y:y-1);}); return [...fy].sort((a,b)=>b-a); }
+function setFY(fy,el){ currentFY=fy; document.querySelectorAll('.fy-chip').forEach(c=>c.classList.remove('active')); if(el) el.classList.add('active'); const cr=document.getElementById('custom-range'); if(cr) cr.style.display=fy==='custom'?'flex':'none'; renderDashboard(); }
+function buildFYOpts(){ const fys=getAvailableFYs(),cur=getCurrentFY(); document.getElementById('fy-opts').innerHTML=fys.filter(s=>s!==cur).map(s=>{const k=`FY${s}`,lbl=`FY ${s}-${String(s+1).slice(2)}`;return `<div class="fy-chip${currentFY===k?' active':''}" onclick="setFY('${k}',this)">${lbl}</div>`;}).join(''); }
+function empTotal(id,type,keys){ return keys.reduce((s,k)=>s+(type==='ta'?getTA(id,k):type==='paid'?getPaid(id,k):getDed(id,k)),0); }
+function empMonthCount(id,keys){ return keys.filter(k=>getTA(id,k)>0).length; }
+function empLastPaidMonth(id,keys){ const months=keys.filter(k=>getTA(id,k)>0); if(!months.length) return '—'; const last=months[months.length-1]; const[y,m]=last.split('-');return `${MONTHS[parseInt(m)-1]} ${y}`; }
+
+// ═══════════════════════════════════════════════════
+//  DB
+// ═══════════════════════════════════════════════════
+function saveDB(){ DB.meta.updated=new Date().toISOString(); localStorage.setItem('travelxp_v5',JSON.stringify(DB)); }
+function loadDB(){ try{ const s=localStorage.getItem('travelxp_v5'); if(s) DB=JSON.parse(s); }catch(e){} }
+
+// ═══════════════════════════════════════════════════
+//  NAVIGATE
+// ═══════════════════════════════════════════════════
+const RENDERERS = { dashboard:renderDashboard, insights:renderInsights, active:renderActive, resigned:renderResigned, compare:renderCompare, 'rpt-team':renderTeamReport,'rpt-monthly':renderMonthlyReport,'rpt-desig':renderDesigReport, heatmap:renderHeatmap, export:renderExportPage, gascode:renderGASCode };
+function navigate(page){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active')); const el=document.getElementById('page-'+page); if(el) el.classList.add('active'); document.querySelectorAll('.sb-item').forEach(n=>{ if(n.getAttribute('onclick')?.includes("'"+page+"'")) n.classList.add('active'); }); if(RENDERERS[page]) RENDERERS[page](); }
+
+// ═══════════════════════════════════════════════════
+//  GAS LOAD
+// ═══════════════════════════════════════════════════
+async function loadFromGAS(){ if(GAS_URL.includes('YOUR_WEB_APP_URL')){ toast('Demo mode'); renderDashboard(); return; } loading(true); try{ const res=await fetch(GAS_URL+'?action=getAllData&t='+Date.now()); const data=await res.json(); if(data.manpower) DB.manpower=data.manpower; if(data.paid) DB.paid=data.paid; if(data.deduction) DB.deduction=data.deduction; saveDB(); document.getElementById('lastSync').textContent='Synced '+new Date().toLocaleTimeString(); toast('Data loaded','success'); renderDashboard(); }catch(e){ toast('Load failed: '+e.message,'error'); } loading(false); }
+
+// ═══════════════════════════════════════════════════
+//  SELECTS
+// ═══════════════════════════════════════════════════
+function populateTeamSelect(...ids){ const emps=getFilteredEmps(); const teams=[...new Set(emps.map(e=>e.teamWise).filter(Boolean))].sort(); ids.forEach(id=>{ const el=document.getElementById(id); if(!el) return; const cur=el.value; el.innerHTML=`<option value="">All Teams</option>`+teams.map(t=>`<option value="${t}"${t===cur?' selected':''}>${t}</option>`).join(''); }); }
+function populateDesigSelect(id){ const el=document.getElementById(id); if(!el) return; const cur=el.value; const ds=[...new Set(getFilteredEmps().map(e=>shortDesig(e)).filter(Boolean).filter(d=>d!=='—'))].sort(); el.innerHTML=`<option value="">All Designations</option>`+ds.map(d=>`<option value="${d}"${d===cur?' selected':''}>${d}</option>`).join(''); }
+function populateHQSelect(id){ const el=document.getElementById(id); if(!el) return; const cur=el.value; const hqs=[...new Set(getFilteredEmps().map(e=>e.hq).filter(Boolean))].sort(); el.innerHTML=`<option value="">All HQs</option>`+hqs.map(h=>`<option value="${h}"${h===cur?' selected':''}>${h}</option>`).join(''); }
+
+// Always include All Time in FY selects
+function populateFYSelect(id){ const el=document.getElementById(id); if(!el) return; const cur=el.value; const fys=getAvailableFYs(); const curFY=getCurrentFY();
+  const opts=[`<option value="all"${(!cur||cur==='all')?' selected':''}>All Time</option>`,
+    `<option value="current"${cur==='current'?' selected':''}>Current FY (${curFY}-${String(curFY+1).slice(2)})</option>`,
+    ...fys.map(s=>{const k=`FY${s}`,l=`FY ${s}-${String(s+1).slice(2)}`;return `<option value="${k}"${k===cur?' selected':''}>${l}</option>`;})];
+  el.innerHTML=opts.join(''); }
+
+// ═══════════════════════════════════════════════════
+//  CHART HELPERS
+// ═══════════════════════════════════════════════════
+function renderBarSVG(id, data, field='value', opts={}){
+  const el=document.getElementById(id); if(!el||!data.length) return;
+  const max=Math.max(...data.map(d=>d[field]||0),1);
+  const W=el.clientWidth||560, H=opts.h||(el.classList.contains('ch-lg')?280:el.classList.contains('ch-xl')?320:220), PAD_L=opts.padL||48, PAD_B=30;
+  const barArea=W-PAD_L-12; const n=data.length;
+  const barGW=Math.floor(barArea/n); const barW=Math.max(8,Math.min(opts.maxBar||42,Math.floor(barGW*0.55)));
+  const gridLines=[0,.2,.4,.6,.8,1].map(frac=>{
+    const y=H-PAD_B-Math.round(frac*(H-PAD_B-10)); const val=Math.round(max*frac);
+    const lbl=val>=100000?`₹${(val/100000).toFixed(1)}L`:val>=1000?`₹${Math.round(val/1000)}k`:val>0?`₹${val}`:'₹0';
+    return `<line x1="${PAD_L}" y1="${y}" x2="${W-4}" y2="${y}" stroke="#e4e8f0" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="${PAD_L-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#7a84aa" font-family="Outfit">${lbl}</text>`;
+  }).join('');
+  const bars=data.map((d,i)=>{
+    const bh=Math.max(2,Math.round((d[field]||0)/max*(H-PAD_B-10)));
+    const x=PAD_L+i*barGW+(barGW-barW)/2; const y=H-PAD_B-bh;
+    const color=opts.colors?opts.colors[i%opts.colors.length]:C[i%C.length];
+    const lbl=(d.label||d.name||''); const shortLbl=lbl.length>8?lbl.slice(0,7)+'…':lbl;
+    const valLbl=fmtINRK(d[field]);
+    return `<rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="4" fill="${color}" opacity=".88"/>
+      <rect x="${x}" y="${y}" width="${barW}" height="4" rx="2" fill="${color}"/>
+      <text x="${x+barW/2}" y="${H-PAD_B+13}" text-anchor="middle" font-size="9" fill="#7a84aa" font-family="Outfit">${shortLbl}</text>
+      ${d[field]?`<text x="${x+barW/2}" y="${y-4}" text-anchor="middle" font-size="9" fill="${color}" font-family="DM Mono" font-weight="500">${valLbl}</text>`:''}`;
+  }).join('');
+  el.innerHTML=`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}">${gridLines}${bars}</svg>`;
+}
+
+function renderGroupedBarSVG(id, data, groupKeys, labels, groupColors, h){
+  const el=document.getElementById(id); if(!el||!data.length) return;
+  const H=h||( el.classList.contains('ch-lg')?280:el.classList.contains('ch-xl')?320:220 );
+  const W=el.clientWidth||540, PAD_L=44, PAD_B=30;
+  const max=Math.max(...data.flatMap(d=>d.vals),1);
+  const n=data.length, ng=groupKeys.length;
+  const grpW=Math.floor((W-PAD_L-12)/n);
+  const barW=Math.max(5,Math.floor(grpW*0.7/ng)); const grpPad=Math.floor(grpW*0.14);
+  const gridLines=[0,.2,.4,.6,.8,1].map(frac=>{
+    const y=H-PAD_B-Math.round(frac*(H-PAD_B-10)); const val=Math.round(max*frac);
+    const lbl=val>=100000?`₹${(val/100000).toFixed(1)}L`:val>=1000?`₹${Math.round(val/1000)}k`:'₹0';
+    return `<line x1="${PAD_L}" y1="${y}" x2="${W-4}" y2="${y}" stroke="#e4e8f0" stroke-width="1" stroke-dasharray="4,3"/>
+      <text x="${PAD_L-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#7a84aa">${lbl}</text>`;
+  }).join('');
+  const bars=data.map((d,i)=>{
+    const gx=PAD_L+i*grpW+grpPad;
+    return d.vals.map((v,gi)=>{
+      const bh=Math.max(2,Math.round(v/max*(H-PAD_B-10)));
+      const x=gx+gi*(barW+2); const y=H-PAD_B-bh;
+      return `<rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="3" fill="${groupColors[gi%groupColors.length]}" opacity=".86"/>`;
+    }).join('')+`<text x="${PAD_L+i*grpW+grpW/2}" y="${H-PAD_B+13}" text-anchor="middle" font-size="8.5" fill="#7a84aa">${(d.label||'').slice(0,9)}</text>`;
+  }).join('');
+  const legend=groupKeys.map((k,i)=>`<rect x="${8+i*65}" y="4" width="9" height="9" rx="2" fill="${groupColors[i]}"/><text x="${20+i*65}" y="12" font-size="9.5" fill="#3a4060" font-family="Outfit">${labels[i]||k}</text>`).join('');
+  el.innerHTML=`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}">${gridLines}${bars}<g>${legend}</g></svg>`;
+}
+
+function renderHorizBars(id, data, opts={}){
+  const el=document.getElementById(id); if(!el||!data.length) return;
+  const max=Math.max(...data.map(d=>d.value),1);
+  el.innerHTML=data.map((d,i)=>`
+    <div style="margin-bottom:9px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+        <span style="font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:${opts.maxW||200}px;">${d.label}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);">${fmtINRF(d.value)}</span>
+      </div>
+      <div class="pbar" style="height:${opts.h||8}px;"><div class="pbar-fill" style="width:${Math.round(d.value/max*100)}%;height:${opts.h||8}px;background:${C[i%C.length]};"></div></div>
+      ${opts.sub&&d.sub?`<div style="font-size:10px;color:var(--muted);margin-top:1px;">${d.sub}</div>`:''}
+    </div>`).join('');
+}
+
+function renderDonutSVG(id, data){
+  const el=document.getElementById(id); if(!el||!data.length) return;
+  const H=el.classList.contains('ch-lg')?280:220;
+  const total=data.reduce((s,d)=>s+d.value,0)||1;
+  let offset=0; const r=62, cx=90, cy=H/2;
+  const segs=data.map((d,i)=>{
+    const pct=d.value/total, angle=pct*360;
+    const s1=offset*Math.PI/180, s2=(offset+angle)*Math.PI/180; offset+=angle;
+    const x1=cx+r*Math.sin(s1),y1=cy-r*Math.cos(s1),x2=cx+r*Math.sin(s2),y2=cy-r*Math.cos(s2);
+    const large=angle>180?1:0;
+    return `<path d="M${cx},${cy} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${large},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${C[i%C.length]}" opacity=".9"><title>${d.label}: ${fmtINRF(d.value)} (${Math.round(pct*100)}%)</title></path>`;
+  }).join('');
+  const inner=`<circle cx="${cx}" cy="${cy}" r="40" fill="white"/><text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="13" font-weight="700" fill="#0a0e1a" font-family="Fraunces">${data.length}</text><text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="9" fill="#7a84aa" font-family="Outfit">teams</text>`;
+  const W=el.clientWidth||400;
+  const legend=data.slice(0,9).map((d,i)=>`<div style="display:flex;align-items:center;gap:5px;font-size:11.5px;margin-bottom:4px;"><span style="width:9px;height:9px;border-radius:50%;background:${C[i%C.length]};flex-shrink:0;"></span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;">${d.label}</span><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);">${Math.round(d.value/total*100)}%</span></div>`).join('');
+  el.innerHTML=`<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;"><svg width="184" height="${H}" viewBox="0 0 184 ${H}" style="flex-shrink:0;">${segs}${inner}</svg><div style="flex:1;display:flex;flex-direction:column;min-width:100px;">${legend}</div></div>`;
+}
+
+function renderMiniLineChart(id, data, color='#1a56db', h=80){
+  const el=document.getElementById(id); if(!el||!data.length) return;
+  const W=el.clientWidth||500, H=h;
+  const max=Math.max(...data.map(d=>d.v),1);
+  const step=(W-24)/(data.length-1||1);
+  const pts=data.map((d,i)=>`${12+i*step},${H-10-Math.round(d.v/max*(H-20))}`).join(' ');
+  const area=`${12},${H-10} ${pts} ${12+(data.length-1)*step},${H-10}`;
+  el.innerHTML=`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}">
+    <defs><linearGradient id="lg${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity=".3"/><stop offset="100%" stop-color="${color}" stop-opacity=".02"/></linearGradient></defs>
+    <polygon points="${area}" fill="url(#lg${id})"/>
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    ${data.map((d,i)=>{const x=12+i*step,y=H-10-Math.round(d.v/max*(H-20));return `<circle cx="${x}" cy="${y}" r="3" fill="${color}" opacity=".8"/>`}).join('')}
+    ${data.map((d,i)=>`<text x="${12+i*step}" y="${H}" text-anchor="middle" font-size="9" fill="#7a84aa">${d.l}</text>`).join('')}
+  </svg>`;
+}
+
+function sparklineSVG(vals, color='#1a56db', w=60, h=22){
+  if(!vals||!vals.length) return '';
+  const max=Math.max(...vals,1), step=w/(vals.length-1||1);
+  const pts=vals.map((v,i)=>`${i*step},${h-2-Math.round(v/max*(h-4))}`).join(' ');
+  return `<svg class="sparkline" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════════
+function renderDashboard(){
+  document.getElementById('dash-date').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  buildFYOpts();
+  const keys=getFilterKeys(), emps=getFilteredEmps(), active=emps.filter(e=>!isResigned(e));
+  let totalPaid=0, totalDed=0;
+  emps.forEach(e=>keys.forEach(k=>{ totalPaid+=getPaid(e.empId,k); totalDed+=getDed(e.empId,k); }));
+  const totalTA=totalPaid+totalDed;
+
+  document.getElementById('hero-lbl').textContent=`Total TA Claim — ${getFYLabel()}`;
+  document.getElementById('hero-total').textContent=fmtINRF(totalTA);
+  document.getElementById('hero-stats').innerHTML=`
+    <div class="hero-stat"><div class="hero-stat-val" style="color:#6ee7b7;">${fmtINRF(totalPaid)}</div><div class="hero-stat-lbl">Total Paid</div></div>
+    <div class="hero-stat"><div class="hero-stat-val" style="color:#fbbf24;">${fmtINRF(totalDed)}</div><div class="hero-stat-lbl">Deductions</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">${active.length}</div><div class="hero-stat-lbl">Active</div></div>
+    <div class="hero-stat"><div class="hero-stat-val">${emps.filter(isResigned).length}</div><div class="hero-stat-lbl">Resigned</div></div>`;
+
+  document.getElementById('nav-active-count').textContent=active.length;
+  document.getElementById('nav-res-count').textContent=emps.filter(isResigned).length;
+
+  const teams=groupBy(emps,'teamWise');
+  const avgTA=active.length?Math.round(totalTA/active.length):0;
+  const highTA=Math.max(...emps.map(e=>empTotal(e.empId,'ta',keys)),0);
+  const dedPct=totalTA?Math.round(totalDed/totalTA*100):0;
+  const activeWithTA=active.filter(e=>empTotal(e.empId,'ta',keys)>0).length;
+
+  document.getElementById('dash-kpis').innerHTML=[
+    {ico:'👥',lbl:'Active Staff',val:active.length,sub:emps.length+' total incl. resigned',col:'var(--accent)'},
+    {ico:'🏷️',lbl:'Teams',val:Object.keys(teams).length,sub:'Sales & Product',col:'var(--purple)'},
+    {ico:'📊',lbl:'Avg TA / Employee',val:fmtINRF(avgTA),sub:getFYLabel(),col:'var(--green)',raw:true},
+    {ico:'🏆',lbl:'Highest TA Claim',val:fmtINRF(highTA),sub:'Single employee',col:'var(--amber)',raw:true},
+    {ico:'📅',lbl:'Months Selected',val:keys.length,sub:'Data period',col:'var(--teal)'},
+    {ico:'📉',lbl:'Attrition Count',val:emps.filter(isResigned).length,sub:'Total resigned',col:'var(--red)'},
+    {ico:'🎯',lbl:'Ded Rate',val:dedPct+'%',sub:'Of total TA claim',col:'var(--rose)',raw:true},
+    {ico:'✅',lbl:'Active w/ Data',val:activeWithTA,sub:`of ${active.length} active`,col:'var(--green)'},
+  ].map(k=>`<div class="kpi" style="--kpi-col:${k.col};"><span class="kpi-ic">${k.ico}</span><div class="kpi-lbl">${k.lbl}</div><div class="kpi-val" style="color:${k.col};font-size:${k.raw?'18px':'26px'};">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
+
+  // Monthly trend grouped bars
+  const monthMap={};
+  keys.forEach(k=>{ const[y,m]=k.split('-');const lbl=MONTHS[parseInt(m)-1]+"'"+String(y).slice(2);if(!monthMap[lbl])monthMap[lbl]={paid:0,ded:0};emps.forEach(e=>{monthMap[lbl].paid+=getPaid(e.empId,k);monthMap[lbl].ded+=getDed(e.empId,k);}); });
+  const tl=Object.keys(monthMap), trendPaid=tl.map(l=>monthMap[l].paid), trendDed=tl.map(l=>monthMap[l].ded);
+  const trendMax=Math.max(...trendPaid.map((p,i)=>p+trendDed[i]),1);
+  const el=document.getElementById('chart-trend'); const W2=el?.clientWidth||560,H2=280,PL=48,PB=30;
+  const n2=tl.length||1; const bgW=Math.floor((W2-PL-12)/n2); const bW2=Math.max(4,Math.floor(bgW*0.3)); const gap2=2;
+  const gridY=[0,.2,.4,.6,.8,1].map(f=>{const y=H2-PB-Math.round(f*(H2-PB-10));const v=Math.round(trendMax*f);return `<line x1="${PL}" y1="${y}" x2="${W2-4}" y2="${y}" stroke="#e4e8f0" stroke-width="1" stroke-dasharray="4,3"/><text x="${PL-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#7a84aa">${v>=100000?`₹${(v/100000).toFixed(1)}L`:v>=1000?`₹${Math.round(v/1000)}k`:'₹0'}</text>`;}).join('');
+  const trendBars=tl.map((lbl,i)=>{
+    const ph=Math.max(2,Math.round(trendPaid[i]/trendMax*(H2-PB-10)));
+    const dh=Math.max(2,Math.round(trendDed[i]/trendMax*(H2-PB-10)));
+    const x=PL+i*bgW; const px=x+4,dx=px+bW2+gap2;
+    return `<rect x="${px}" y="${H2-PB-ph}" width="${bW2}" height="${ph}" rx="3" fill="#1a56db" opacity=".87"/>
+      <rect x="${dx}" y="${H2-PB-dh}" width="${bW2}" height="${dh}" rx="3" fill="#dc2626" opacity=".76"/>
+      <text x="${x+bgW/2}" y="${H2-PB+13}" text-anchor="middle" font-size="8.5" fill="#7a84aa">${lbl}</text>`;
+  }).join('');
+  const trendLeg=`<g><rect x="${W2-110}" y="6" width="10" height="10" rx="3" fill="#1a56db" opacity=".87"/><text x="${W2-97}" y="15" font-size="10" fill="#3a4060">Paid</text><rect x="${W2-55}" y="6" width="10" height="10" rx="3" fill="#dc2626" opacity=".76"/><text x="${W2-42}" y="15" font-size="10" fill="#3a4060">Ded</text></g>`;
+  if(el) el.innerHTML=`<svg width="100%" height="${H2}" viewBox="0 0 ${W2} ${H2}">${gridY}${trendBars}${trendLeg}</svg>`;
+
+  // Team donut
+  const teamData=Object.entries(teams).map(([t,es])=>({label:t,value:es.reduce((s,e)=>s+empTotal(e.empId,'ta',keys),0)})).sort((a,b)=>b.value-a.value);
+  renderDonutSVG('chart-team-pie',teamData);
+  renderBarSVG('chart-team-bar',teamData,undefined,{maxBar:44});
+  const teamPDData=Object.entries(teams).map(([t,es])=>({label:t,vals:[es.reduce((s,e)=>s+empTotal(e.empId,'paid',keys),0),es.reduce((s,e)=>s+empTotal(e.empId,'ded',keys),0)]})).sort((a,b)=>(b.vals[0]+b.vals[1])-(a.vals[0]+a.vals[1]));
+  renderGroupedBarSVG('chart-team-split',teamPDData,['paid','ded'],['Paid','Deduction'],['#059669','#dc2626']);
+
+  // Top 10 employees with sparkline
+  const empRank=emps.map(e=>({e,ta:empTotal(e.empId,'ta',keys)})).sort((a,b)=>b.ta-a.ta).slice(0,10);
+  const maxTA2=empRank[0]?.ta||1;
+  document.getElementById('chart-top-emp').innerHTML=empRank.map((r,i)=>{
+    const recentKeys=keys.slice(-6); const vals=recentKeys.map(k=>getTA(r.e.empId,k));
+    return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border);cursor:pointer;" onclick='openBreakup(${safe(r.e)})'>
+      <div style="width:18px;text-align:right;font-size:10px;font-weight:700;color:var(--muted);">${i+1}</div>
+      ${mkAvatar(r.e)}
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:600;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.e.empName}</div>
+        <div style="font-size:10px;color:var(--muted);">${shortDesig(r.e)} · ${r.e.teamWise||'—'}</div>
+        <div class="pbar" style="height:3px;margin-top:3px;"><div class="pbar-fill" style="width:${Math.round(r.ta/maxTA2*100)}%;height:3px;background:${C[i%C.length]};"></div></div>
+      </div>
+      ${sparklineSVG(vals,C[i%C.length])}
+      <div class="a-ta" style="font-size:11.5px;">${fmtINRF(r.ta)}</div>
+    </div>`;
+  }).join('');
+
+  // Designation horizontal bars
+  const desigGroups=groupBy(emps,e=>shortDesig(e));
+  const desigFixed=Object.entries(desigGroups).map(([d,es])=>({label:d&&d!=='—'?d:autoShortDesig(es[0]?.designation||''),value:es.reduce((s,e)=>s+empTotal(e.empId,'ta',keys),0),sub:`${es.length} employees`})).sort((a,b)=>b.value-a.value);
+  renderHorizBars('chart-desig',desigFixed.slice(0,9),{sub:true});
+
+  // Quarterly chart
+  const qMap={};
+  keys.forEach(k=>{const[y,m]=k.split('-').map(Number);const q=Math.ceil((m<=3?m+12:m)/3);const qi=m<=3?`Q4 ${y-1}/${String(y).slice(2)}`:`Q${q-1} ${y}/${String(y+1).slice(2)}`;if(!qMap[qi])qMap[qi]={paid:0,ded:0};emps.forEach(e=>{qMap[qi].paid+=getPaid(e.empId,k);qMap[qi].ded+=getDed(e.empId,k);});});
+  const ql=Object.keys(qMap).sort();
+  renderGroupedBarSVG('chart-quarterly',ql.map(q=>({label:q.slice(0,6),vals:[qMap[q].paid,qMap[q].ded]})),['paid','ded'],['Paid','Ded'],['#059669','#dc2626']);
+
+  // HQ wise TA
+  const hqGroups=groupBy(emps,'hq');
+  const hqData=Object.entries(hqGroups).map(([h,es])=>({label:h&&h!=='—'?h:'Unknown',value:es.reduce((s,e)=>s+empTotal(e.empId,'ta',keys),0)})).sort((a,b)=>b.value-a.value);
+  renderBarSVG('chart-hq',hqData.slice(0,10),undefined,{maxBar:36});
+
+  // Split chart
+  const pPct=totalTA?Math.round(totalPaid/totalTA*100):0;
+  document.getElementById('chart-split').innerHTML=`
+    <div style="display:flex;gap:12px;margin-bottom:12px;">
+      <div style="flex:1;text-align:center;background:#d1fae5;border-radius:10px;padding:14px;">
+        <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#065f46;">${fmtINRF(totalPaid)}</div>
+        <div style="font-size:9.5px;font-weight:700;color:#059669;margin-top:2px;text-transform:uppercase;letter-spacing:.06em;">Total Paid</div>
+        <div style="font-size:18px;font-weight:700;color:#065f46;margin-top:3px;">${pPct}%</div>
+      </div>
+      <div style="flex:1;text-align:center;background:#fee2e2;border-radius:10px;padding:14px;">
+        <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:#991b1b;">${fmtINRF(totalDed)}</div>
+        <div style="font-size:9.5px;font-weight:700;color:#dc2626;margin-top:2px;text-transform:uppercase;letter-spacing:.06em;">Deductions</div>
+        <div style="font-size:18px;font-weight:700;color:#991b1b;margin-top:3px;">${100-pPct}%</div>
+      </div>
+    </div>
+    <div class="pbar" style="height:12px;"><div class="pbar-fill" style="width:${pPct}%;height:12px;background:linear-gradient(90deg,#059669,#34d399);"></div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10.5px;color:var(--muted);font-weight:600;"><span>← Paid ${pPct}%</span><span>Ded ${100-pPct}% →</span></div>`;
+
+  // Headcount
+  const hcData=Object.entries(teams).map(([t,es])=>({team:t,active:es.filter(e=>!isResigned(e)).length,res:es.filter(isResigned).length})).sort((a,b)=>(b.active+b.res)-(a.active+a.res));
+  document.getElementById('chart-headcount').innerHTML=hcData.map(d=>`
+    <div style="margin-bottom:10px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:2px;">
+        <span style="font-size:12.5px;font-weight:600;">${d.team}</span>
+        <span style="font-size:10.5px;color:var(--muted);font-family:'DM Mono',monospace;">${d.active} active · ${d.res} resigned</span>
+      </div>
+      <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--border);">
+        <div style="width:${Math.round(d.active/(d.active+d.res||1)*100)}%;background:#059669;"></div>
+        <div style="flex:1;background:#dc2626;opacity:.55;"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════
+//  INSIGHTS PAGE
+// ═══════════════════════════════════════════════════
+function renderInsights(){
+  populateFYSelect('ins-fy');
+  const fyVal=document.getElementById('ins-fy')?.value||'all';
+  const savedFY=currentFY; currentFY=fyVal;
+  const keys=getFilterKeys(); currentFY=savedFY;
+  const emps=getFilteredEmps();
+  const active=emps.filter(e=>!isResigned(e));
+  let totalPaid=0,totalDed=0;
+  emps.forEach(e=>keys.forEach(k=>{totalPaid+=getPaid(e.empId,k);totalDed+=getDed(e.empId,k);}));
+  const totalTA=totalPaid+totalDed;
+  const avgTA=active.length?Math.round(totalTA/active.length):0;
+  const teams=groupBy(emps,'teamWise');
+
+  // Highest team
+  const teamTotals=Object.entries(teams).map(([t,es])=>({t,ta:es.reduce((s,e)=>s+empTotal(e.empId,'ta',keys),0)})).sort((a,b)=>b.ta-a.ta);
+  const topTeam=teamTotals[0]||{t:'—',ta:0};
+  const topEmp=emps.map(e=>({e,ta:empTotal(e.empId,'ta',keys)})).sort((a,b)=>b.ta-a.ta)[0]||{e:{empName:'—'},ta:0};
+
+  // Month-on-month for all keys
+  const momData=keys.map(k=>{
+    const [y,m]=k.split('-');
+    const v=emps.reduce((s,e)=>s+getTA(e.empId,k),0);
+    return {l:MONTHS[parseInt(m)-1].slice(0,3)+"'"+String(y).slice(2),v};
+  });
+
+  document.getElementById('ins-cards').innerHTML=[
+    {style:'--i-c1:#1a56db;--i-c2:#3b82f6',ico:'🏆',val:topTeam.t,lbl:'Top Performing Team',sub:fmtINRF(topTeam.ta)+' total TA'},
+    {style:'--i-c1:#059669;--i-c2:#10b981',ico:'👤',val:topEmp.e.empName,lbl:'Top Employee',sub:fmtINRF(topEmp.ta)+' total TA'},
+    {style:'--i-c1:#d97706;--i-c2:#f59e0b',ico:'📊',val:fmtINRF(avgTA),lbl:'Avg TA per Active Emp',sub:`${keys.length} months period`},
+    {style:'--i-c1:#dc2626;--i-c2:#ef4444',ico:'📉',val:totalTA?Math.round(totalDed/totalTA*100)+'%':'—',lbl:'Overall Deduction Rate',sub:fmtINRF(totalDed)+' deducted'},
+  ].map(c=>`<div class="insight-card" style="${c.style}"><div style="font-size:22px;margin-bottom:6px;">${c.ico}</div><div class="insight-val">${c.val}</div><div class="insight-lbl">${c.lbl}</div><div class="insight-sub">${c.sub}</div></div>`).join('');
+
+  renderMiniLineChart('ins-mom',momData,'#1a56db',280);
+
+  // Avg TA per emp by team
+  const avgTeamData=teamTotals.map(({t,ta})=>({label:t,value:Math.round(ta/(teams[t]?.length||1))}));
+  renderBarSVG('ins-avg-team',avgTeamData,undefined,{maxBar:40,h:280});
+
+  // Top 5 & Bottom 5
+  const sorted=emps.map(e=>({e,ta:empTotal(e.empId,'ta',keys)})).filter(x=>x.ta>0).sort((a,b)=>b.ta-a.ta);
+  const top5=sorted.slice(0,5), bot5=sorted.slice(-5).reverse();
+  document.getElementById('ins-top-bot').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div><div style="font-size:11px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">🏅 Top 5</div>
+        ${top5.map((r,i)=>`<div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;">${mkAvatar(r.e)}<div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.e.empName}</div><div style="font-size:10px;color:var(--muted);">${r.e.teamWise||'—'}</div></div><span class="a-ta" style="font-size:11px;">${fmtINRF(r.ta)}</span></div>`).join('')}
+      </div>
+      <div><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;">📋 Bottom 5</div>
+        ${bot5.map((r,i)=>`<div style="display:flex;align-items:center;gap:7px;margin-bottom:7px;">${mkAvatar(r.e)}<div style="flex:1;min-width:0;"><div style="font-weight:600;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.e.empName}</div><div style="font-size:10px;color:var(--muted);">${r.e.teamWise||'—'}</div></div><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);">${fmtINRF(r.ta)}</span></div>`).join('')}
+      </div>
+    </div>`;
+
+  // Deduction rate by team
+  const dedRateData=teamTotals.map(({t,ta})=>{
+    const ded=teams[t].reduce((s,e)=>s+empTotal(e.empId,'ded',keys),0);
+    return {label:t,value:ta?Math.round(ded/ta*100):0};
+  });
+  renderBarSVG('ins-ded-rate',dedRateData,undefined,{maxBar:36,h:220});
+}
+
+// ═══════════════════════════════════════════════════
+//  ACTIVE EMPLOYEES
+// ═══════════════════════════════════════════════════
+function getKeysForSelect(selectId){
+  const fyVal=document.getElementById(selectId)?.value||'all';
+  const savedFY=currentFY; currentFY=fyVal;
+  const keys=getFilterKeys(); currentFY=savedFY;
+  return keys;
+}
+function sortActive(col){ if(activeSortCol===col){activeSortDir=activeSortDir==='desc'?'asc':'desc';}else{activeSortCol=col;activeSortDir='desc';} renderActive(); }
+
+function renderActive(){
+  populateTeamSelect('active-team'); populateDesigSelect('active-desig'); populateHQSelect('active-hq'); populateFYSelect('active-fy');
+  const q=(document.getElementById('active-search')?.value||'').toLowerCase();
+  const team=document.getElementById('active-team')?.value||'';
+  const desig=document.getElementById('active-desig')?.value||'';
+  const hq=document.getElementById('active-hq')?.value||'';
+  const sortVal=document.getElementById('active-sort')?.value||'ta-desc';
+  const keys=getKeysForSelect('active-fy');
+  let emps=getFilteredEmps().filter(e=>!isResigned(e));
+  if(q) emps=emps.filter(e=>`${e.empId} ${e.empName} ${e.teamWise} ${e.hq}`.toLowerCase().includes(q));
+  if(team) emps=emps.filter(e=>e.teamWise===team);
+  if(desig) emps=emps.filter(e=>shortDesig(e)===desig);
+  if(hq) emps=emps.filter(e=>e.hq===hq);
+
+  // Sort
+  const [sf,sd]=sortVal.split('-');
+  emps.sort((a,b)=>{
+    let va,vb;
+    if(sf==='ta'){va=empTotal(a.empId,'ta',keys);vb=empTotal(b.empId,'ta',keys);}
+    else if(sf==='paid'){va=empTotal(a.empId,'paid',keys);vb=empTotal(b.empId,'paid',keys);}
+    else if(sf==='ded'){va=empTotal(a.empId,'ded',keys);vb=empTotal(b.empId,'ded',keys);}
+    else if(sf==='name'){va=a.empName;vb=b.empName;return sd==='asc'?va.localeCompare(vb):vb.localeCompare(va);}
+    else if(sf==='months'){va=empMonthCount(a.empId,keys);vb=empMonthCount(b.empId,keys);}
+    else{va=0;vb=0;}
+    return sd==='asc'?va-vb:vb-va;
+  });
+
+  let gTA=0,gPaid=0,gDed=0;
+  const allTA=emps.map(e=>empTotal(e.empId,'ta',keys));
+
+  const rows=emps.map((e,i)=>{
+    const ta=empTotal(e.empId,'ta',keys),paid=empTotal(e.empId,'paid',keys),ded=empTotal(e.empId,'ded',keys);
+    const mo=empMonthCount(e.empId,keys),lp=empLastPaidMonth(e.empId,keys);
+    const dedR=ta?Math.round(ded/ta*100):0;
+    gTA+=ta;gPaid+=paid;gDed+=ded;
+    const recentKeys=keys.slice(-6);const spVals=recentKeys.map(k=>getTA(e.empId,k));
+    return `<tr class="clickable-row">
+      <td style="color:var(--muted);font-size:11px;" onclick="openBreakup(${safe(e)})">${i+1}</td>
+      <td onclick="openBreakup(${safe(e)})"><span class="badge ${getTeamBadge(e.teamWise)}">${e.teamWise||'—'}</span></td>
+      <td onclick="openBreakup(${safe(e)})"><span style="font-family:'DM Mono',monospace;color:var(--accent);font-size:12px;">${e.empId}</span></td>
+      <td onclick="openBreakup(${safe(e)})"><div style="display:flex;align-items:center;gap:7px;">${mkAvatar(e)}<span style="font-weight:600;">${e.empName}</span></div></td>
+      <td onclick="openBreakup(${safe(e)})"><span class="badge bg-indigo">${shortDesig(e)}</span></td>
+      <td onclick="openBreakup(${safe(e)})" style="color:var(--muted);font-size:12px;">${e.hq||'—'}</td>
+      <td onclick="openBreakup(${safe(e)})">${ta?`<span class="a-ta">${fmtINRF(ta)}</span>`:'<span class="a-zero">—</span>'}</td>
+      <td onclick="openBreakup(${safe(e)})">${ded?`<span class="a-ded">${fmtINRF(ded)}</span>`:'<span class="a-zero">—</span>'}</td>
+      <td onclick="openBreakup(${safe(e)})">${paid?`<span class="a-paid">${fmtINRF(paid)}</span>`:'<span class="a-zero">—</span>'}</td>
+      <td onclick="openBreakup(${safe(e)})"><span style="font-size:11px;font-weight:700;color:${dedR>30?'var(--red)':dedR>15?'var(--amber)':'var(--green)'};">${dedR}%</span></td>
+      <td onclick="openBreakup(${safe(e)})"><span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--teal);">${mo}</span></td>
+      <td onclick="openBreakup(${safe(e)})"><span style="font-size:11.5px;color:var(--ink2);font-weight:500;">${lp}</span></td>
+      <td onclick="openBreakup(${safe(e)})">${sparklineSVG(spVals,'#1a56db',60,22)}</td>
+      <td onclick="event.stopPropagation()"><button class="btn btn-ghost btn-sm" onclick="openEdit('${e.empId}')">✏️ Edit</button></td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="14" style="text-align:center;padding:28px;color:var(--muted);">No records found</td></tr>';
+
+  document.getElementById('active-sub').textContent=`${emps.length} active employees`;
+  document.getElementById('active-summary-strip').innerHTML=`
+    <div class="stat-cell"><div class="stat-cell-val" style="color:var(--accent);">${fmtINRK(gTA)}</div><div class="stat-cell-lbl">Total TA</div></div>
+    <div class="stat-cell"><div class="stat-cell-val" style="color:var(--green);">${fmtINRK(gPaid)}</div><div class="stat-cell-lbl">Total Paid</div></div>
+    <div class="stat-cell"><div class="stat-cell-val" style="color:var(--red);">${fmtINRK(gDed)}</div><div class="stat-cell-lbl">Total Ded</div></div>`;
+  document.getElementById('active-tbody').innerHTML=rows+`<tr class="tot-row">
+    <td colspan="6" style="font-family:'Fraunces',serif;font-size:13px;">TOTAL (${emps.length} employees)</td>
+    <td><span class="a-ta">${fmtINRF(gTA)}</span></td><td><span class="a-ded">${fmtINRF(gDed)}</span></td>
+    <td><span class="a-paid">${fmtINRF(gPaid)}</span></td><td colspan="5"></td></tr>`;
+}
+
+function renderResigned(){
+  populateTeamSelect('res-team'); populateDesigSelect('res-desig'); populateFYSelect('res-fy');
+  const q=(document.getElementById('res-search')?.value||'').toLowerCase();
+  const team=document.getElementById('res-team')?.value||'';
+  const desig=document.getElementById('res-desig')?.value||'';
+  const sortVal=document.getElementById('res-sort')?.value||'ta-desc';
+  const keys=getKeysForSelect('res-fy');
+  let emps=getFilteredEmps().filter(isResigned);
+  if(q) emps=emps.filter(e=>`${e.empId} ${e.empName} ${e.teamWise}`.toLowerCase().includes(q));
+  if(team) emps=emps.filter(e=>e.teamWise===team);
+  if(desig) emps=emps.filter(e=>shortDesig(e)===desig);
+
+  const [sf,sd]=sortVal.split('-');
+  emps.sort((a,b)=>{
+    if(sf==='ta'){const va=empTotal(a.empId,'ta',keys),vb=empTotal(b.empId,'ta',keys);return sd==='asc'?va-vb:vb-va;}
+    if(sf==='name'){return sd==='asc'?a.empName.localeCompare(b.empName):b.empName.localeCompare(a.empName);}
+    if(sf==='resign'){const da=new Date(a.dateOfResignation?.split('-').reverse().join('-')||0),db=new Date(b.dateOfResignation?.split('-').reverse().join('-')||0);return sd==='desc'?db-da:da-db;}
+    return 0;
+  });
+
+  document.getElementById('res-sub').textContent=`${emps.length} resigned employees`;
+  let gTA=0,gPaid=0,gDed=0;
+  const rows=emps.map((e,i)=>{
+    const ta=empTotal(e.empId,'ta',keys),paid=empTotal(e.empId,'paid',keys),ded=empTotal(e.empId,'ded',keys);
+    const mo=empMonthCount(e.empId,keys),lp=empLastPaidMonth(e.empId,keys);
+    const tenure=e.dateOfJoining&&e.dateOfResignation&&e.dateOfJoining!=='—'&&e.dateOfResignation!=='—'?tenureMonths(e.dateOfJoining,e.dateOfResignation):'—';
+    gTA+=ta;gPaid+=paid;gDed+=ded;
+    return `<tr class="clickable-row">
+      <td style="color:var(--muted);font-size:11px;" onclick="openBreakup(${safe(e)})">${i+1}</td>
+      <td onclick="openBreakup(${safe(e)})"><span class="badge ${getTeamBadge(e.teamWise)}">${e.teamWise||'—'}</span></td>
+      <td onclick="openBreakup(${safe(e)})"><span style="font-family:'DM Mono',monospace;color:var(--red);font-size:12px;">${e.empId}</span></td>
+      <td onclick="openBreakup(${safe(e)})"><div style="display:flex;align-items:center;gap:7px;">${mkAvatar(e)}<span style="font-weight:600;">${e.empName}</span></div></td>
+      <td onclick="openBreakup(${safe(e)})"><span class="badge bg-gray">${shortDesig(e)}</span></td>
+      <td onclick="openBreakup(${safe(e)})" style="color:var(--muted);font-size:12px;">${e.hq||'—'}</td>
+      <td onclick="openBreakup(${safe(e)})" style="color:var(--muted);font-size:12px;">${fmtDate(e.dateOfJoining)}</td>
+      <td onclick="openBreakup(${safe(e)})"><span class="badge bg-red">${fmtDate(e.dateOfResignation)}</span></td>
+      <td onclick="openBreakup(${safe(e)})"><span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;">${tenure}</span></td>
+      <td onclick="openBreakup(${safe(e)})">${ta?`<span class="a-ta">${fmtINRF(ta)}</span>`:'<span class="a-zero">—</span>'}</td>
+      <td onclick="openBreakup(${safe(e)})">${ded?`<span class="a-ded">${fmtINRF(ded)}</span>`:'<span class="a-zero">—</span>'}</td>
+      <td onclick="openBreakup(${safe(e)})">${paid?`<span class="a-paid">${fmtINRF(paid)}</span>`:'<span class="a-zero">—</span>'}</td>
+      <td onclick="openBreakup(${safe(e)})"><span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--teal);">${mo}</span></td>
+      <td onclick="openBreakup(${safe(e)})"><span style="font-size:11.5px;color:var(--ink2);font-weight:500;">${lp}</span></td>
+      <td onclick="event.stopPropagation()"><button class="btn btn-ghost btn-sm" onclick="openEdit('${e.empId}')">✏️ Edit</button></td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="15" style="text-align:center;padding:28px;color:var(--muted);">No resigned employees</td></tr>';
+  document.getElementById('res-tbody').innerHTML=rows+`<tr class="tot-row">
+    <td colspan="9" style="font-family:'Fraunces',serif;font-size:13px;">TOTAL (${emps.length} employees)</td>
+    <td><span class="a-ta">${fmtINRF(gTA)}</span></td><td><span class="a-ded">${fmtINRF(gDed)}</span></td>
+    <td><span class="a-paid">${fmtINRF(gPaid)}</span></td><td colspan="3"></td></tr>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  COMPARE EMPLOYEES
+// ═══════════════════════════════════════════════════
+function renderCompare(){
+  populateFYSelect('cmp-fy');
+  const emps=getFilteredEmps();
+  ['cmp-emp1','cmp-emp2'].forEach(id=>{
+    const el=document.getElementById(id); if(!el) return; const cur=el.value;
+    el.innerHTML=`<option value="">Select employee…</option>`+emps.map(e=>`<option value="${e.empId}"${e.empId===cur?' selected':''}>${e.empName} (${e.empId})</option>`).join('');
+  });
+  const id1=document.getElementById('cmp-emp1')?.value, id2=document.getElementById('cmp-emp2')?.value;
+  if(!id1||!id2){ document.getElementById('cmp-result').innerHTML=`<div style="text-align:center;padding:40px;color:var(--muted);">Select two employees to compare</div>`; return; }
+  const e1=emps.find(e=>e.empId===id1), e2=emps.find(e=>e.empId===id2);
+  if(!e1||!e2) return;
+  const keys=getKeysForSelect('cmp-fy');
+  const metrics=[
+    {lbl:'Total TA Claim',v1:empTotal(id1,'ta',keys),v2:empTotal(id2,'ta',keys),fmt:fmtINRF,higher:'pos'},
+    {lbl:'Total Paid',v1:empTotal(id1,'paid',keys),v2:empTotal(id2,'paid',keys),fmt:fmtINRF,higher:'pos'},
+    {lbl:'Total Deduction',v1:empTotal(id1,'ded',keys),v2:empTotal(id2,'ded',keys),fmt:fmtINRF,higher:'neg'},
+    {lbl:'Active Months',v1:empMonthCount(id1,keys),v2:empMonthCount(id2,keys),fmt:v=>`${v} mo`,higher:'pos'},
+    {lbl:'Avg Monthly TA',v1:empMonthCount(id1,keys)?Math.round(empTotal(id1,'ta',keys)/empMonthCount(id1,keys)):0,v2:empMonthCount(id2,keys)?Math.round(empTotal(id2,'ta',keys)/empMonthCount(id2,keys)):0,fmt:fmtINRF,higher:'pos'},
+    {lbl:'Deduction Rate',v1:empTotal(id1,'ta',keys)?Math.round(empTotal(id1,'ded',keys)/empTotal(id1,'ta',keys)*100):0,v2:empTotal(id2,'ta',keys)?Math.round(empTotal(id2,'ded',keys)/empTotal(id2,'ta',keys)*100):0,fmt:v=>`${v}%`,higher:'neg'},
+  ];
+  document.getElementById('cmp-result').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh1);">
+      <div style="padding:20px;text-align:center;background:linear-gradient(135deg,#dbeafe,#eff6ff);">
+        ${mkAvatar(e1,'52px','18px')}
+        <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:700;margin-top:8px;">${e1.empName}</div>
+        <div style="font-size:11px;color:var(--muted);">${shortDesig(e1)} · ${e1.teamWise||'—'}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px;">${e1.hq||'—'}</div>
+      </div>
+      <div style="padding:20px;background:var(--card2);display:flex;flex-direction:column;gap:0;">
+        ${metrics.map(m=>{
+          const w1=m.v1>=m.v2, w2=m.v2>=m.v1;
+          const c1=(m.higher==='pos'?w1:!w1)?'var(--green)':'var(--muted)';
+          const c2=(m.higher==='pos'?w2:!w2)?'var(--green)':'var(--muted)';
+          return `<div style="display:grid;grid-template-columns:1fr 120px 1fr;align-items:center;padding:10px 16px;border-bottom:1px solid var(--border);">
+            <div style="text-align:right;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:${c1};">${m.fmt(m.v1)}</div>
+            <div style="text-align:center;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;">${m.lbl}</div>
+            <div style="text-align:left;font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:${c2};">${m.fmt(m.v2)}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="padding:20px;text-align:center;background:linear-gradient(135deg,#d1fae5,#ecfdf5);">
+        ${mkAvatar(e2,'52px','18px')}
+        <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:700;margin-top:8px;">${e2.empName}</div>
+        <div style="font-size:11px;color:var(--muted);">${shortDesig(e2)} · ${e2.teamWise||'—'}</div>
+        <div style="font-size:10px;color:var(--muted);margin-top:2px;">${e2.hq||'—'}</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;">
+      <div class="card"><div class="card-title"><span class="dot" style="background:var(--accent);"></span>${e1.empName} — Monthly Trend</div><div id="cmp-chart1" style="min-height:160px;"></div></div>
+      <div class="card"><div class="card-title"><span class="dot" style="background:var(--green);"></span>${e2.empName} — Monthly Trend</div><div id="cmp-chart2" style="min-height:160px;"></div></div>
+    </div>`;
+  // Charts after DOM update
+  setTimeout(()=>{
+    const d1=keys.map((k,i)=>{const[y,m]=k.split('-');return{l:MONTHS[parseInt(m)-1].slice(0,1),v:getTA(id1,k)};});
+    const d2=keys.map((k,i)=>{const[y,m]=k.split('-');return{l:MONTHS[parseInt(m)-1].slice(0,1),v:getTA(id2,k)};});
+    renderMiniLineChart('cmp-chart1',d1,'#1a56db',160);
+    renderMiniLineChart('cmp-chart2',d2,'#059669',160);
+  },50);
+}
+
+// ═══════════════════════════════════════════════════
+//  REPORTS
+// ═══════════════════════════════════════════════════
+function renderTeamReport(){
+  populateFYSelect('rpt-team-fy'); const keys=getKeysForSelect('rpt-team-fy');
+  const emps=getFilteredEmps(); const teams=groupBy(emps,'teamWise');
+  const data=Object.entries(teams).map(([t,es])=>{
+    const paid=es.reduce((s,e)=>s+empTotal(e.empId,'paid',keys),0);
+    const ded=es.reduce((s,e)=>s+empTotal(e.empId,'ded',keys),0);
+    return {label:t,paid,ded,ta:paid+ded,count:es.length,active:es.filter(e=>!isResigned(e)).length};
+  }).sort((a,b)=>b.ta-a.ta);
+  renderBarSVG('rpt-team-bar',data.map(d=>({label:d.label,value:d.ta})),undefined,{maxBar:48});
+  const top4=data.slice(0,4);
+  const monthlyByTeam=keys.map(k=>{const[y,m]=k.split('-');return{label:MONTHS[parseInt(m)-1]+"'"+String(y).slice(2),vals:top4.map(d=>teams[d.label].reduce((s,e)=>s+getTA(e.empId,k),0))};});
+  renderGroupedBarSVG('rpt-team-trend',monthlyByTeam,top4.map(d=>d.label),top4.map(d=>d.label.slice(0,10)),C.slice(0,4));
+  document.getElementById('rpt-team-thead').innerHTML=`<tr><th>Team</th><th>Active</th><th>Total Emps</th><th>Total Paid</th><th>Total Ded</th><th>TA Claim</th><th>Avg/Emp</th><th>Ded%</th></tr>`;
+  document.getElementById('rpt-team-tbody').innerHTML=data.map(d=>`<tr>
+    <td style="font-weight:700;"><span class="badge ${getTeamBadge(d.label)}">${d.label}</span></td>
+    <td><span class="badge bg-green">${d.active}</span></td><td>${d.count}</td>
+    <td><span class="a-paid">${fmtINRF(d.paid)}</span></td>
+    <td><span class="a-ded">${fmtINRF(d.ded)}</span></td>
+    <td><span class="a-ta">${fmtINRF(d.ta)}</span></td>
+    <td style="font-family:'DM Mono',monospace;font-size:11.5px;color:var(--muted);">${fmtINRF(d.count?Math.round(d.ta/d.count):0)}</td>
+    <td><span style="font-size:11px;font-weight:700;color:${d.ta&&d.ded/d.ta>.3?'var(--red)':'var(--amber)'};">${d.ta?Math.round(d.ded/d.ta*100):0}%</span></td>
+  </tr>`).join('');
+}
+
+function renderMonthlyReport(){
+  populateFYSelect('rpt-monthly-fy'); populateTeamSelect('rpt-monthly-team');
+  const keys=getKeysForSelect('rpt-monthly-fy');
+  const filterTeam=document.getElementById('rpt-monthly-team')?.value||'';
+  let emps=getFilteredEmps(); if(filterTeam) emps=emps.filter(e=>e.teamWise===filterTeam);
+  const data=keys.map(k=>{
+    const[y,m]=k.split('-');
+    const paid=emps.reduce((s,e)=>s+getPaid(e.empId,k),0);
+    const ded=emps.reduce((s,e)=>s+getDed(e.empId,k),0);
+    const active=emps.filter(e=>getTA(e.empId,k)>0).length;
+    return {label:`${MONTHS[parseInt(m)-1]} ${y}`,shortLbl:MONTHS[parseInt(m)-1]+"'"+String(y).slice(2),paid,ded,ta:paid+ded,active};
+  });
+  renderBarSVG('rpt-monthly-bar',data.map(d=>({label:d.shortLbl,value:d.ta})),undefined,{maxBar:36});
+  renderGroupedBarSVG('rpt-monthly-split',data.map(d=>({label:d.shortLbl,vals:[d.paid,d.ded]})),['paid','ded'],['Paid','Ded'],['#059669','#dc2626']);
+  document.getElementById('rpt-monthly-thead').innerHTML=`<tr><th>Month</th><th>Emps w/ Data</th><th>Total Paid</th><th>Total Ded</th><th>TA Claim</th><th>Avg / Emp</th></tr>`;
+  document.getElementById('rpt-monthly-tbody').innerHTML=data.map(d=>`<tr>
+    <td style="font-weight:600;">${d.label}</td><td>${d.active}</td>
+    <td><span class="a-paid">${fmtINRF(d.paid)}</span></td>
+    <td><span class="a-ded">${fmtINRF(d.ded)}</span></td>
+    <td><span class="a-ta">${fmtINRF(d.ta)}</span></td>
+    <td style="font-family:'DM Mono',monospace;font-size:11.5px;color:var(--muted);">${fmtINRF(d.active?Math.round(d.ta/d.active):0)}</td>
+  </tr>`).join('');
+}
+
+function renderDesigReport(){
+  populateFYSelect('rpt-desig-fy'); populateTeamSelect('rpt-desig-team');
+  const keys=getKeysForSelect('rpt-desig-fy');
+  const filterTeam=document.getElementById('rpt-desig-team')?.value||'';
+  let emps=getFilteredEmps(); if(filterTeam) emps=emps.filter(e=>e.teamWise===filterTeam);
+  const groups=groupBy(emps,e=>shortDesig(e));
+  const data=Object.entries(groups).map(([d,es])=>{
+    const paid=es.reduce((s,e)=>s+empTotal(e.empId,'paid',keys),0);
+    const ded=es.reduce((s,e)=>s+empTotal(e.empId,'ded',keys),0);
+    return {label:d,paid,ded,ta:paid+ded,count:es.length};
+  }).sort((a,b)=>b.ta-a.ta);
+  renderHorizBars('rpt-desig-chart',data.slice(0,10),{maxW:170,h:10});
+  renderBarSVG('rpt-desig-avg',data.map(d=>({label:d.label,value:d.count?Math.round(d.ta/d.count):0})),undefined,{maxBar:36});
+  document.getElementById('rpt-desig-thead').innerHTML=`<tr><th>Designation</th><th>Count</th><th>Total Paid</th><th>Total Ded</th><th>TA Claim</th><th>Avg / Emp</th><th>Ded%</th></tr>`;
+  document.getElementById('rpt-desig-tbody').innerHTML=data.map(d=>`<tr>
+    <td style="font-weight:700;"><span class="badge bg-indigo">${d.label}</span></td><td>${d.count}</td>
+    <td><span class="a-paid">${fmtINRF(d.paid)}</span></td>
+    <td><span class="a-ded">${fmtINRF(d.ded)}</span></td>
+    <td><span class="a-ta">${fmtINRF(d.ta)}</span></td>
+    <td style="font-family:'DM Mono',monospace;font-size:11.5px;color:var(--muted);">${fmtINRF(d.count?Math.round(d.ta/d.count):0)}</td>
+    <td><span style="font-size:11px;font-weight:700;color:var(--amber);">${d.ta?Math.round(d.ded/d.ta*100):0}%</span></td>
+  </tr>`).join('');
+}
+
+// ═══════════════════════════════════════════════════
+//  HEATMAP
+// ═══════════════════════════════════════════════════
+function renderHeatmap(){
+  populateTeamSelect('hm-team');
+  // Populate year select
+  const yrEl=document.getElementById('hm-year'); if(yrEl){
+    const yrs=[...new Set(getAllKeys().map(k=>k.split('-')[0]))].sort((a,b)=>b-a);
+    const cur=yrEl.value||yrs[0]||'';
+    yrEl.innerHTML=yrs.map(y=>`<option value="${y}"${y===cur?' selected':''}>${y}</option>`).join('');
+  }
+  const year=document.getElementById('hm-year')?.value||new Date().getFullYear();
+  const filterTeam=document.getElementById('hm-team')?.value||'';
+  const metric=document.getElementById('hm-metric')?.value||'ta';
+  let emps=getFilteredEmps(); if(filterTeam) emps=emps.filter(e=>e.teamWise===filterTeam);
+  const keys=MK.map(m=>`${year}-${m}`);
+  const allVals=emps.flatMap(e=>keys.map(k=>metric==='ta'?getTA(e.empId,k):metric==='paid'?getPaid(e.empId,k):getDed(e.empId,k))).filter(v=>v>0);
+  const maxV=Math.max(...allVals,1);
+  function hmClass(v){ if(!v)return 'hm-0'; const p=v/maxV; return p<.1?'hm-1':p<.3?'hm-2':p<.5?'hm-3':p<.75?'hm-4':'hm-5'; }
+  const rows=emps.slice(0,80).map(e=>`<tr>
+    <td style="font-weight:600;white-space:nowrap;padding:5px 10px;background:var(--card2);position:sticky;left:0;border-right:2px solid var(--border);min-width:160px;">${e.empName}</td>
+    <td style="padding:4px 8px;white-space:nowrap;background:var(--card2);font-size:9.5px;color:var(--muted);">${e.teamWise||'—'}</td>
+    ${keys.map(k=>{const v=metric==='ta'?getTA(e.empId,k):metric==='paid'?getPaid(e.empId,k):getDed(e.empId,k);return `<td class="${hmClass(v)}" title="${fmtINRF(v)}">${v?fmtINRK(v):''}</td>`;}).join('')}
+  </tr>`).join('');
+  document.getElementById('heatmap-content').innerHTML=`<table class="heatmap">
+    <thead><tr><th style="min-width:160px;position:sticky;left:0;z-index:5;">Employee</th><th>Team</th>${MONTHS.map((m,i)=>`<th>${m} ${year}</th>`).join('')}</tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+// ═══════════════════════════════════════════════════
+//  TEAM BADGE
+// ═══════════════════════════════════════════════════
+const teamBadgeCache={};
+function getTeamBadge(team){ if(!team) return 'bg-gray'; if(teamBadgeCache[team]) return teamBadgeCache[team]; const t=team.toLowerCase(); let cls; if(t.includes('alpha')||t.includes('sales alpha'))cls='bg-blue'; else if(t.includes('beta'))cls='bg-teal'; else if(t.includes('gamma'))cls='bg-amber'; else if(t.includes('delta'))cls='bg-purple'; else if(t.includes('product east'))cls='bg-green'; else if(t.includes('product west'))cls='bg-pink'; else if(t.includes('product'))cls='bg-green'; else if(t.includes('sales'))cls='bg-blue'; else{const classes=['bg-blue','bg-green','bg-amber','bg-purple','bg-teal','bg-pink','bg-orange','bg-indigo'];cls=classes[Math.abs(hash(team))%classes.length];} teamBadgeCache[team]=cls;return cls; }
+
+// ═══════════════════════════════════════════════════
+//  BREAKUP MODAL
+// ═══════════════════════════════════════════════════
+function openBreakup(emp){
+  if(typeof emp==='string') emp=JSON.parse(emp);
+  breakupEmpId=emp.empId;
+  const av=document.getElementById('bu-avatar');
+  av.className=`av ${avCls(emp)}`; av.style.cssText='width:50px;height:50px;font-size:18px;flex-shrink:0;'; av.textContent=initials(emp);
+  document.getElementById('bu-name').textContent=emp.empName;
+  document.getElementById('bu-sub').textContent=`${shortDesig(emp)}${emp.teamWise?' · '+emp.teamWise:''}${emp.hq?' · '+emp.hq:''}`;
+  document.getElementById('bu-badges').innerHTML=`
+    <span class="badge ${isResigned(emp)?'bg-red':'bg-green'}">${isResigned(emp)?'Resigned':'Active'}</span>
+    ${emp.teamWise?`<span class="badge ${getTeamBadge(emp.teamWise)}">${emp.teamWise}</span>`:''}
+    ${shortDesig(emp)!=='—'?`<span class="badge bg-indigo">${shortDesig(emp)}</span>`:''}
+    <span class="badge bg-gray" style="font-family:'DM Mono',monospace;">${emp.empId}</span>`;
+  const allYrs=[...new Set(getAllKeys().map(k=>parseInt(k.split('-')[0])))].sort((a,b)=>b-a);
+  const curY=new Date().getFullYear();
+  document.getElementById('bu-year').innerHTML=['all',...allYrs].map(y=>{
+    const sel=y===curY||(y==='all'&&!allYrs.includes(curY));
+    return `<option value="${y}"${sel?' selected':''}>${y==='all'?'All Years':y}</option>`;
+  }).join('');
+  document.getElementById('breakup-modal').style.display='flex';
+  refreshBreakup();
+}
+function refreshBreakup(){
+  const yearVal=document.getElementById('bu-year')?.value;
+  const view=document.getElementById('bu-view')?.value||'monthly';
+  const empId=breakupEmpId;
+  let keys;
+  if(yearVal==='all') keys=getAllKeys();
+  else{ const year=parseInt(yearVal||new Date().getFullYear()); keys=MK.map(m=>`${year}-${m}`); }
+  const totalPaid=keys.reduce((s,k)=>s+getPaid(empId,k),0);
+  const totalDed=keys.reduce((s,k)=>s+getDed(empId,k),0);
+  const totalTA=totalPaid+totalDed;
+  const activeMo=keys.filter(k=>getTA(empId,k)>0).length;
+  const avgMo=activeMo?Math.round(totalTA/activeMo):0;
+  document.getElementById('bu-kpis').innerHTML=`
+    <div class="bk-card"><div class="bk-val" style="color:var(--green);">${fmtINRF(totalPaid)}</div><div class="bk-lbl">Total Paid</div></div>
+    <div class="bk-card"><div class="bk-val" style="color:var(--red);">${fmtINRF(totalDed)}</div><div class="bk-lbl">Deductions</div></div>
+    <div class="bk-card"><div class="bk-val" style="color:var(--accent);">${fmtINRF(totalTA)}</div><div class="bk-lbl">TA Claim</div></div>
+    <div class="bk-card"><div class="bk-val" style="color:var(--teal);font-size:18px;">${activeMo}<span style="font-size:12px;"> mo</span></div><div class="bk-lbl">Active Months</div></div>
+    <div class="bk-card"><div class="bk-val" style="color:var(--amber);font-size:17px;">${fmtINRK(avgMo)}</div><div class="bk-lbl">Avg / Month</div></div>`;
+
+  const mData=keys.map((k,i)=>({l:k.split('-')[1],v:getTA(empId,k)}));
+  renderMiniLineChart('bu-mini-chart',mData,'#1a56db',90);
+
+  if(view==='quarterly'){
+    const qMap={};
+    keys.forEach(k=>{const[y,m]=k.split('-').map(Number);const q=Math.ceil((m<=3?m+12:m)/3);const qk=m<=3?`Q4 ${y-1}`:(`Q${q-1} ${y}`);if(!qMap[qk])qMap[qk]={paid:0,ded:0};qMap[qk].paid+=getPaid(empId,k);qMap[qk].ded+=getDed(empId,k);});
+    document.getElementById('bu-thead').innerHTML=`<tr><th>Quarter</th><th>Paid</th><th>Deduction</th><th>TA Claim</th></tr>`;
+    document.getElementById('bu-tbody').innerHTML=Object.entries(qMap).map(([q,v])=>`<tr>
+      <td style="font-weight:600;">${q}</td>
+      <td>${v.paid?`<span class="a-paid">${fmtINRF(v.paid)}</span>`:'<span class="a-zero">—</span>'}</td>
+      <td>${v.ded?`<span class="a-ded">${fmtINRF(v.ded)}</span>`:'<span class="a-zero">—</span>'}</td>
+      <td>${v.paid+v.ded?`<span class="a-ta">${fmtINRF(v.paid+v.ded)}</span>`:'<span class="a-zero">—</span>'}</td>
+    </tr>`).join('')+`<tr class="tot-row"><td>TOTAL</td><td><span class="a-paid">${fmtINRF(totalPaid)}</span></td><td><span class="a-ded">${fmtINRF(totalDed)}</span></td><td><span class="a-ta">${fmtINRF(totalTA)}</span></td></tr>`;
+  } else {
+    document.getElementById('bu-thead').innerHTML=`<tr><th>Month</th><th>Paid</th><th>Deduction</th><th>TA Claim</th><th>Ded%</th></tr>`;
+    document.getElementById('bu-tbody').innerHTML=keys.map(k=>{
+      const[y,m]=k.split('-'); const paid=getPaid(empId,k),ded=getDed(empId,k),ta=paid+ded;
+      const dedR=ta?Math.round(ded/ta*100):0;
+      return `<tr${!ta?' style="opacity:.35"':''}>
+        <td style="font-weight:600;">${MONTHS[parseInt(m)-1]} ${y}</td>
+        <td>${paid?`<span class="a-paid">${fmtINRF(paid)}</span>`:'<span class="a-zero">—</span>'}</td>
+        <td>${ded?`<span class="a-ded">${fmtINRF(ded)}</span>`:'<span class="a-zero">—</span>'}</td>
+        <td>${ta?`<span class="a-ta">${fmtINRF(ta)}</span>`:'<span class="a-zero">—</span>'}</td>
+        <td>${ta?`<span style="font-size:11px;font-weight:700;color:${dedR>30?'var(--red)':dedR>15?'var(--amber)':'var(--muted)'};">${dedR}%</span>`:'—'}</td>
+      </tr>`;
+    }).join('')+`<tr class="tot-row"><td>TOTAL</td><td><span class="a-paid">${fmtINRF(totalPaid)}</span></td><td><span class="a-ded">${fmtINRF(totalDed)}</span></td><td><span class="a-ta" style="font-size:13px;">${fmtINRF(totalTA)}</span></td><td></td></tr>`;
+  }
+}
+function exportBreakupXLSX(){
+  const empId=breakupEmpId; const emp=DB.manpower.find(e=>e.empId===empId); if(!emp) return;
+  const keys=getAllKeys();
+  const rows=keys.map(k=>{const[y,m]=k.split('-');return{'Month':`${MONTHS[parseInt(m)-1]} ${y}`,'Paid':getPaid(empId,k),'Deduction':getDed(empId,k),'TA Claim':getTA(empId,k)};}).filter(r=>r['TA Claim']>0);
+  const wb=XLSX.utils.book_new();const ws=XLSX.utils.json_to_sheet(rows);stWS(ws);XLSX.utils.book_append_sheet(wb,ws,empId);dlXL(wb,`${emp.empName}_TA_${today()}`);
+}
+
+// ═══════════════════════════════════════════════════
+//  EDIT EMPLOYEE
+// ═══════════════════════════════════════════════════
+const EDIT_FIELDS=[
+  {id:'empName',label:'Employee Name *'},{id:'designation',label:'Designation'},{id:'shortDesignation',label:'Short Designation'},
+  {id:'teamWise',label:'Team'},{id:'hq',label:'HQ / Location'},{id:'department',label:'Department'},
+  {id:'division',label:'Division'},{id:'dateOfJoining',label:'Date of Joining'},{id:'dateOfResignation',label:'Date of Resignation'},
+  {id:'currentPhone',label:'Phone'},{id:'officialEmail',label:'Email'},{id:'currentCity',label:'City'},{id:'currentState',label:'State'},
+];
+function openEdit(empId){ const emp=DB.manpower.find(e=>e.empId===empId); if(!emp) return; editEmpId=empId; document.getElementById('edit-modal-sub').textContent=`${empId} · ${emp.empName}`; document.getElementById('edit-form-grid').innerHTML=EDIT_FIELDS.map(f=>`<div><label class="inp-lbl">${f.label}</label><input class="inp" id="ef-${f.id}" type="text" value="${(emp[f.id]||'').replace(/"/g,'&quot;')}"/></div>`).join(''); document.getElementById('edit-modal').style.display='flex'; }
+function saveEditEmployee(){ const emp=DB.manpower.find(e=>e.empId===editEmpId); if(!emp) return; EDIT_FIELDS.forEach(f=>{const el=document.getElementById('ef-'+f.id);if(el) emp[f.id]=el.value.trim();}); saveDB(); document.getElementById('edit-modal').style.display='none'; toast('Employee updated','success'); const ap=document.querySelector('.page.active')?.id?.replace('page-',''); if(ap&&RENDERERS[ap]) RENDERERS[ap](); }
+
+// ═══════════════════════════════════════════════════
+//  UPLOAD / EXPORT
+// ═══════════════════════════════════════════════════
+function handleDrop(e){ e.preventDefault(); const f=e.dataTransfer.files[0]; if(f) processXL(f); }
+function handleFileUpload(e){ const f=e.target.files[0]; if(f) processXL(f); }
+function processXL(file){
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const wb=XLSX.read(ev.target.result,{type:'binary'}); let counts={mp:0,paid:0,ded:0};
+      if(wb.SheetNames.some(s=>s.toUpperCase()==='MANPOWER')){ const sn=wb.SheetNames.find(s=>s.toUpperCase()==='MANPOWER'); const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn]); rows.forEach(r=>{const empId=String(r['Emp Id']||r['empId']||r['EMP ID']||'').trim();if(!empId) return;const raw={empId,empName:r['Emp Name']||r['empName']||r['NAME']||'',designation:r['Designation']||r['designation']||'',shortDesignation:r['Short Designation']||r['shortDesignation']||'',department:r['Department']||r['department']||'',division:r['Division']||r['division']||'',hq:r['HQ']||r['hq']||'',teamWise:r['Team Wise']||r['teamWise']||r['TEAM']||'',dateOfJoining:fmtDate(r['Date of Joining']||r['dateOfJoining']||''),dateOfResignation:fmtDate(r['Date Of Resignation']||r['dateOfResignation']||''),reportingManagerId:r['Reporting Manager ID']||'',currentPhone:r['Current Phone']||'',officialEmail:r['Official E-Mail Id']||r['Email']||'',gender:r['Gender']||'',age:r['Age']||'',bloodGroup:r['Blood Group']||'',yearsOfExperience:r['Years of Experience']||'',currentCity:r['Current City']||'',currentState:r['Current State']||''};const idx=DB.manpower.findIndex(e=>e.empId===empId);if(idx>-1)DB.manpower[idx]=raw;else DB.manpower.push(raw);if(!DB.paid[empId])DB.paid[empId]={};if(!DB.deduction[empId])DB.deduction[empId]={};counts.mp++;});}
+      ['PAID','DEDUCTION'].forEach(shName=>{const sn=wb.SheetNames.find(s=>s.toUpperCase()===shName);if(!sn) return;const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn]);rows.forEach(r=>{const empId=String(r['EMPLOYEE ID']||r['Emp ID']||r['Emp Id']||r['empId']||'').trim();if(!empId) return;const store=shName==='PAID'?DB.paid:DB.deduction;if(!store[empId])store[empId]={};Object.keys(r).forEach(k=>{if(['EMPLOYEE ID','Emp ID','Emp Id','empId','NAME','Name','DESIGNATION','TEAM WISE','Status'].includes(k)) return;let d;const raw=r[k];if(typeof raw==='number'&&raw>40000&&raw<60000){const base=new Date(1900,0,0);base.setDate(base.getDate()+raw-1);d=base;}else d=new Date(raw);if(isNaN(d?.getTime())) return;const mk2=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;if(r[k]) store[empId][mk2]=parseFloat(r[k])||0;if(shName==='PAID')counts.paid++;else counts.ded++;});});});
+      saveDB();
+      document.getElementById('upload-preview').innerHTML=`<div class="card" style="max-width:460px;"><h4 style="color:var(--green);margin-bottom:10px;font-family:'Fraunces',serif;">✅ Import Successful</h4><p style="margin:3px 0;font-size:13px;">👥 Employees: <strong>${counts.mp}</strong></p><p style="margin:3px 0;font-size:13px;">💵 Paid entries: <strong>${counts.paid}</strong></p><p style="margin:3px 0;font-size:13px;">📋 Deduction entries: <strong>${counts.ded}</strong></p><button class="btn btn-primary" style="margin-top:12px;" onclick="navigate('dashboard')">View Dashboard →</button></div>`;
+      toast('Excel imported','success');
+    }catch(err){ toast('Import failed: '+err.message,'error'); }
+  };
+  r.readAsBinaryString(file);
+}
+
+function renderExportPage(){ document.getElementById('exp-all-count').textContent=`${DB.manpower.length} employees · ${getAvailableFYs().length} financial years`; }
+function stWS(ws){ if(ws['!ref']){const r=XLSX.utils.decode_range(ws['!ref']);ws['!cols']=Array(r.e.c+1).fill({wch:20});} }
+function dlXL(wb,name){ XLSX.writeFile(wb,name+'.xlsx'); toast('Downloaded '+name+'.xlsx','success'); }
+
+function buildEmpRows(resigned){
+  const allKeys=getAllKeys();
+  return getFilteredEmps().filter(e=>resigned?isResigned(e):!isResigned(e)).map(e=>{
+    const ta=empTotal(e.empId,'ta',allKeys),paid=empTotal(e.empId,'paid',allKeys),ded=empTotal(e.empId,'ded',allKeys);
+    const months=empMonthCount(e.empId,allKeys),lp=empLastPaidMonth(e.empId,allKeys);
+    const row={'Team':e.teamWise||'','Emp ID':e.empId,'Name':e.empName,'Designation':shortDesig(e),'HQ':e.hq||'','Total TA Claim':ta,'Total Deduction':ded,'Total Paid':paid,'Total Months':months,'Last Paid Month':lp};
+    if(resigned){row['DOJ']=fmtDate(e.dateOfJoining);row['Resignation Date']=fmtDate(e.dateOfResignation);}
+    return row;
+  });
+}
+function exportEmpXLSX(type){ const wb=XLSX.utils.book_new(); if(type==='active'){const ws=XLSX.utils.json_to_sheet(buildEmpRows(false));stWS(ws);XLSX.utils.book_append_sheet(wb,ws,'Active_Employees');dlXL(wb,'Active_Employees_'+today());}else{const ws=XLSX.utils.json_to_sheet(buildEmpRows(true));stWS(ws);XLSX.utils.book_append_sheet(wb,ws,'Resigned_Employees');dlXL(wb,'Resigned_Employees_'+today());} }
+function exportFullXLSX(){ const wb=XLSX.utils.book_new(); [['Active_Employees',buildEmpRows(false)],['Resigned_Employees',buildEmpRows(true)],['Manpower_Full',DB.manpower]].forEach(([n,d])=>{const ws=XLSX.utils.json_to_sheet(d);stWS(ws);XLSX.utils.book_append_sheet(wb,ws,n);}); dlXL(wb,'TravelXP_Full_'+today()); }
+function exportMonthlyXLSX(){ const wb=XLSX.utils.book_new(); const emps=getFilteredEmps(); const keys=getAllKeys(); const data=keys.map(k=>{const[y,m]=k.split('-');const paid=emps.reduce((s,e)=>s+getPaid(e.empId,k),0);const ded=emps.reduce((s,e)=>s+getDed(e.empId,k),0);return{'Month':`${MONTHS[parseInt(m)-1]} ${y}`,'Total Paid':paid,'Total Deduction':ded,'TA Claim':paid+ded};}); const ws=XLSX.utils.json_to_sheet(data);stWS(ws);XLSX.utils.book_append_sheet(wb,ws,'Monthly');dlXL(wb,'Monthly_Report_'+today()); }
+function exportTeamXLSX(){ const wb=XLSX.utils.book_new(); const emps=getFilteredEmps();const teams=groupBy(emps,'teamWise');const keys=getAllKeys(); const data=Object.entries(teams).map(([t,es])=>{const paid=es.reduce((s,e)=>s+empTotal(e.empId,'paid',keys),0);const ded=es.reduce((s,e)=>s+empTotal(e.empId,'ded',keys),0);return{'Team':t,'Total Paid':paid,'Total Deduction':ded,'TA Claim':paid+ded,'Employee Count':es.length,'Active':es.filter(e=>!isResigned(e)).length};}); const ws=XLSX.utils.json_to_sheet(data);stWS(ws);XLSX.utils.book_append_sheet(wb,ws,'Teams');dlXL(wb,'Team_Report_'+today()); }
+function exportTableXLSX(theadId,tbodyId,name){ const thead=document.getElementById(theadId),tbody=document.getElementById(tbodyId);if(!tbody) return;const ths=[...thead.querySelectorAll('th')].map(t=>t.textContent.trim());const rows=[...tbody.querySelectorAll('tr')].map(tr=>{const r={};[...tr.querySelectorAll('td')].forEach((td,i)=>r[ths[i]||i]=td.textContent.trim());return r;});const wb=XLSX.utils.book_new();const ws=XLSX.utils.json_to_sheet(rows);stWS(ws);XLSX.utils.book_append_sheet(wb,ws,name);dlXL(wb,name+'_'+today()); }
+function exportHeatmapXLSX(){ const year=document.getElementById('hm-year')?.value||new Date().getFullYear(); const emps=getFilteredEmps(); const keys=MK.map(m=>`${year}-${m}`); const data=emps.map(e=>{const row={'Name':e.empName,'Team':e.teamWise||''};keys.forEach(k=>{const[y,m]=k.split('-');row[`${MONTHS[parseInt(m)-1]} ${y}`]=getTA(e.empId,k)});return row;}); const wb=XLSX.utils.book_new();const ws=XLSX.utils.json_to_sheet(data);stWS(ws);XLSX.utils.book_append_sheet(wb,ws,'Heatmap');dlXL(wb,'Heatmap_'+year+'_'+today()); }
+function exportJSON(){ const b=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='TravelXP_'+today()+'.json';a.click();toast('JSON exported','success'); }
+const today=()=>new Date().toISOString().slice(0,10);
+
+// ═══════════════════════════════════════════════════
+//  APPS SCRIPT
+// ═══════════════════════════════════════════════════
+const GAS_CODE_TEXT=`// TravelXP Google Apps Script
+const SS = SpreadsheetApp.getActiveSpreadsheet();
+function doGet(e){const a=e.parameter.action||'getAllData';if(a==='getAllData')return j(getAllData());return j({error:'Unknown'});}
+function doPost(e){try{const p=JSON.parse(e.postData.contents);if(p.action==='sync'){syncAll(p.data);return j({status:'ok'});}return j({status:'error'});}catch(err){return j({status:'error',message:err.message});}}
+function j(d){return ContentService.createTextOutput(JSON.stringify(d)).setMimeType(ContentService.MimeType.JSON);}
+function getAllData(){return{manpower:getSheet('MANPOWER'),paid:getMatrix('PAID'),deduction:getMatrix('DEDUCTION')};}
+function getSheet(n){const s=SS.getSheetByName(n);if(!s)return[];const d=s.getDataRange().getValues();if(d.length<2)return[];const h=d[0].map(x=>toCamel(String(x)));return d.slice(1).filter(r=>r[0]).map(r=>{const o={};h.forEach((k,i)=>o[k]=r[i]!=null?String(r[i]):'');return o;});}
+function getMatrix(n){const s=SS.getSheetByName(n);if(!s)return{};const d=s.getDataRange().getValues();if(d.length<2)return{};const h=d[0];const res={};d.slice(1).forEach(row=>{const id=String(row[0]||'').trim();if(!id)return;res[id]={};h.forEach((hv,i)=>{if(i<2)return;const dt=new Date(hv);if(isNaN(dt))return;const k=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');if(row[i])res[id][k]=row[i];});});return res;}
+function toCamel(s){return s.replace(/(?:^\\w|[A-Z]|\\b\\w)/g,(w,i)=>i===0?w.toLowerCase():w.toUpperCase()).replace(/\\s+/g,'');}
+function onOpen(){SpreadsheetApp.getUi().createMenu('TravelXP').addItem('Create Sheets','createSheets').addItem('Deploy Help','deployHelp').addToUi();}
+function createSheets(){['MANPOWER','PAID','DEDUCTION'].forEach(n=>{if(!SS.getSheetByName(n))SS.insertSheet(n);});SpreadsheetApp.getUi().alert('Sheets created!');}
+function deployHelp(){SpreadsheetApp.getUi().showModalDialog(HtmlService.createHtmlOutput('<h3>Deploy as Web App</h3><ol><li>Deploy → New deployment</li><li>Type: Web app</li><li>Execute as: Me</li><li>Access: Anyone</li><li>Copy URL</li></ol>').setWidth(360).setHeight(220),'Deploy Instructions');}`;
+function renderGASCode(){ document.getElementById('gas-code-block').textContent=GAS_CODE_TEXT; }
+function copyGASCode(){ navigator.clipboard.writeText(GAS_CODE_TEXT); toast('Code copied!','success'); }
+function downloadGASCode(){ const b=new Blob([GAS_CODE_TEXT],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Code.gs';a.click();toast('Code.gs downloaded','success'); }
+
+// ═══════════════════════════════════════════════════
+//  SEED DEMO DATA
+// ═══════════════════════════════════════════════════
+function seedDemo(){
+  const teams=['Sales Alpha','Sales Beta','Product East','Product West'];
+  const dObjs=[{d:'Regional Sales Manager',s:'RSM'},{d:'Area Sales Manager',s:'ASM'},{d:'Territory Sales Executive',s:'TSE'},{d:'Senior Representative',s:'SR'},{d:'Product Specialist',s:'PS'},{d:'Medical Representative',s:'MR'}];
+  const hqs=['Mumbai','Chennai','Delhi','Bangalore','Hyderabad','Pune','Kolkata','Ahmedabad','Coimbatore','Jaipur'];
+  const names=['Arjun Sharma','Priya Patel','Rahul Kumar','Sneha Singh','Vikram Nair','Ananya Iyer','Rohit Gupta','Deepa Menon','Amit Joshi','Kavya Reddy','Suresh Pillai','Meera Krishnan','Rajesh Verma','Pooja Shah','Kiran Rao','Aditya Mishra','Nisha Tiwari','Sanjay Bose','Ritu Aggarwal','Mohan Lal'];
+  for(let i=0;i<names.length;i++){
+    const empId='EMP'+String(i+1).padStart(3,'0');const dObj=dObjs[i%dObjs.length];const resigned=i===3||i===8||i===13||i===17;
+    DB.manpower.push({empId,empName:names[i],designation:dObj.d,shortDesignation:dObj.s,teamWise:teams[i%teams.length],hq:hqs[i%hqs.length],department:'Sales',dateOfJoining:'01-04-2021',dateOfResignation:resigned?'31-03-2024':''});
+    DB.paid[empId]={};DB.deduction[empId]={};
+    ['2021-04','2021-05','2021-06','2021-07','2021-08','2021-09','2021-10','2021-11','2021-12',
+     '2022-01','2022-02','2022-03','2022-04','2022-05','2022-06','2022-07','2022-08','2022-09','2022-10','2022-11','2022-12',
+     '2023-01','2023-02','2023-03','2023-04','2023-05','2023-06','2023-07','2023-08','2023-09','2023-10','2023-11','2023-12',
+     '2024-01','2024-02','2024-03','2024-04','2024-05','2024-06','2024-07','2024-08','2024-09','2024-10','2024-11','2024-12',
+     '2025-01','2025-02','2025-03','2025-04','2025-05'].forEach(k=>{
+      if(resigned&&k>='2024-04') return;
+      DB.paid[empId][k]=Math.floor(Math.random()*4000+800);
+      DB.deduction[empId][k]=Math.floor(Math.random()*1000+100);
+    });
+  }
+  saveDB();
+}
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+loadDB();
+if(!DB.manpower.length) seedDemo();
+document.getElementById('lastSync').textContent=DB.meta.updated?'Last: '+new Date(DB.meta.updated).toLocaleTimeString():'Not synced';
+document.getElementById('nav-active-count').textContent=getFilteredEmps().filter(e=>!isResigned(e)).length;
+document.getElementById('nav-res-count').textContent=getFilteredEmps().filter(isResigned).length;
+renderDashboard();
+</script>
+</body>
+</html>
