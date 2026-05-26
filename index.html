@@ -4,7 +4,13 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>TravelXP — Pristine Pearl Pharma</title>
+<link rel="icon"
+        href="https://www.pristinepearlpharma.in/images/alt-logo.png"
+        type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -253,6 +259,11 @@ select.inp option{background:var(--card2);}
     <div class="sb-item" onclick="navigate('rpt-monthly')"><div class="ico">📅</div>Monthly Report</div>
     <div class="sb-item" onclick="navigate('rpt-desig')"><div class="ico">🎯</div>Designation Report</div>
     <div class="sb-item" onclick="navigate('heatmap')"><div class="ico">🌡️</div>Heatmap</div>
+    <div class="sb-item" onclick="navigate('rpt-accounting')"><div class="ico">🧾</div>Accounting Report</div>
+    <div class="sb-item" onclick="navigate('rpt-manager')"><div class="ico">👔</div>Manager Report</div>
+    <div class="sb-item" onclick="navigate('rpt-variance')"><div class="ico">📈</div>MoM Variance</div>
+    <div class="sb-item" onclick="navigate('rpt-budget')"><div class="ico">💰</div>Budget Tracker</div>
+    <div class="sb-item" onclick="navigate('rpt-recovery')"><div class="ico">🔄</div>Recovery Rate</div>
     <div class="sb-sec">Tools</div>
     <div class="sb-item" onclick="navigate('upload')"><div class="ico">📥</div>Upload Excel</div>
     <div class="sb-item" onclick="navigate('export')"><div class="ico">📤</div>Export</div>
@@ -429,6 +440,7 @@ select.inp option{background:var(--card2);}
       <button class="btn btn-excel" onclick="exportEmpXLSX('resigned')">📥 Excel</button>
     </div>
   </div>
+  <div id="res-summary-strip" class="stats-strip" style="max-width:600px;margin-bottom:12px;"></div>
   <div class="tbl-wrap" style="max-height:72vh;">
     <table class="tbl">
       <thead><tr><th>#</th><th>Team</th><th>Emp ID</th><th>Name</th><th>Designation</th><th>HQ</th><th>DOJ</th><th>Resignation</th><th>Tenure</th><th>Total TA</th><th>Total Ded</th><th>Total Paid</th><th>Months</th><th>Last Month</th><th>Actions</th></tr></thead>
@@ -467,6 +479,7 @@ select.inp option{background:var(--card2);}
       <button class="btn btn-excel" onclick="exportTableXLSX('rpt-team-thead','rpt-team-tbody','Team_Report')">📥 Excel</button>
     </div>
   </div>
+  <div id="rpt-team-summary" class="stats-strip" style="max-width:700px;margin-bottom:14px;grid-template-columns:repeat(4,1fr);"></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
     <div class="card"><div class="card-title"><span class="dot" style="background:var(--accent);"></span>Team TA Comparison</div><div id="rpt-team-bar" class="ch-lg"></div></div>
     <div class="card"><div class="card-title"><span class="dot" style="background:var(--amber);"></span>Monthly by Team (Top 4)</div><div id="rpt-team-trend" class="ch-lg"></div></div>
@@ -484,6 +497,7 @@ select.inp option{background:var(--card2);}
       <button class="btn btn-excel" onclick="exportTableXLSX('rpt-monthly-thead','rpt-monthly-tbody','Monthly_Report')">📥 Excel</button>
     </div>
   </div>
+  <div id="rpt-monthly-summary" class="stats-strip" style="max-width:700px;margin-bottom:14px;grid-template-columns:repeat(4,1fr);"></div>
   <div style="display:grid;grid-template-columns:3fr 2fr;gap:14px;margin-bottom:16px;">
     <div class="card"><div class="card-title"><span class="dot" style="background:var(--accent);"></span>Monthly TA Claim</div><div id="rpt-monthly-bar" class="ch-lg"></div></div>
     <div class="card"><div class="card-title"><span class="dot" style="background:var(--green);"></span>Paid vs Ded Monthly</div><div id="rpt-monthly-split" class="ch-lg"></div></div>
@@ -501,6 +515,7 @@ select.inp option{background:var(--card2);}
       <button class="btn btn-excel" onclick="exportTableXLSX('rpt-desig-thead','rpt-desig-tbody','Designation_Report')">📥 Excel</button>
     </div>
   </div>
+  <div id="rpt-desig-summary" class="stats-strip" style="max-width:700px;margin-bottom:14px;grid-template-columns:repeat(4,1fr);"></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
     <div class="card"><div class="card-title"><span class="dot" style="background:var(--purple);"></span>Designation TA Comparison</div><div id="rpt-desig-chart" class="ch-lg"></div></div>
     <div class="card"><div class="card-title"><span class="dot" style="background:var(--teal);"></span>Avg TA per Designation</div><div id="rpt-desig-avg" class="ch-lg"></div></div>
@@ -523,6 +538,125 @@ select.inp option{background:var(--card2);}
     </div>
   </div>
   <div class="card"><div id="heatmap-content" class="heatmap-wrap"></div></div>
+</div>
+
+<!-- ══ ACCOUNTING REPORT ══ -->
+<div id="page-rpt-accounting" class="page">
+  <div class="ph">
+    <div><div class="ph-title">🧾 Accounting Report</div><div class="ph-sub">TA Paid month mapped to Accounting month by designation group</div></div>
+    <div class="ph-actions">
+      <select class="inp" id="rpt-acc-fy" onchange="renderAccountingReport()" style="width:130px;"></select>
+      <select class="inp" id="rpt-acc-team" onchange="renderAccountingReport()" style="width:140px;"><option value="">All Teams</option></select>
+      <select class="inp" id="rpt-acc-group" onchange="renderAccountingReport()" style="width:170px;">
+        <option value="">All Groups</option>
+        <option value="group2">Group +2 (TM/ABM/ABMT/MT/ANM/C&E/SM)</option>
+        <option value="group1">Group +1 (CH/OSH/SH/RSM/ZSM/STH)</option>
+        <option value="group0">PMT (Same Month)</option>
+      </select>
+      <select class="inp" id="rpt-acc-accmonth" onchange="renderAccountingReport()" style="width:150px;"><option value="">All Acc. Months</option></select>
+      <button class="btn btn-excel" onclick="exportAccountingXLSX()">📥 Excel</button>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:14px;">
+    <div style="display:flex;gap:20px;flex-wrap:wrap;" id="acc-summary-strip"></div>
+  </div>
+  <div class="tbl-wrap" style="max-height:72vh;">
+    <table class="tbl">
+      <thead><tr>
+        <th>#</th><th>Team</th><th>Emp ID</th><th>Name</th><th>Designation</th><th>Group</th>
+        <th>TA Paid Month</th><th>Accounting Month</th><th>Paid</th><th>Deduction</th><th>TA Claim</th>
+      </tr></thead>
+      <tbody id="rpt-acc-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ MANAGER REPORT ══ -->
+<div id="page-rpt-manager" class="page">
+  <div class="ph">
+    <div><div class="ph-title">👔 Reporting Manager Report</div><div class="ph-sub">TA claim rolled up by reporting manager</div></div>
+    <div class="ph-actions">
+      <select class="inp" id="rpt-mgr-fy" onchange="renderManagerReport()" style="width:130px;"></select>
+      <button class="btn btn-excel" onclick="exportTableXLSX('rpt-mgr-thead','rpt-mgr-tbody','Manager_Report')">📥 Excel</button>
+    </div>
+  </div>
+  <div id="rpt-mgr-summary" class="stats-strip" style="max-width:700px;margin-bottom:14px;grid-template-columns:repeat(4,1fr);"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--accent);"></span>Manager TA Comparison</div><div id="rpt-mgr-bar" class="ch-lg"></div></div>
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--purple);"></span>Team Size by Manager</div><div id="rpt-mgr-count" class="ch-lg"></div></div>
+  </div>
+  <div class="tbl-wrap"><table class="tbl"><thead id="rpt-mgr-thead"></thead><tbody id="rpt-mgr-tbody"></tbody></table></div>
+</div>
+
+<!-- ══ MOM VARIANCE ══ -->
+<div id="page-rpt-variance" class="page">
+  <div class="ph">
+    <div><div class="ph-title">📈 Month-on-Month Variance</div><div class="ph-sub">Employee TA change vs previous month — flags spikes & drops</div></div>
+    <div class="ph-actions">
+      <select class="inp" id="rpt-var-month" onchange="renderVarianceReport()" style="width:150px;"></select>
+      <select class="inp" id="rpt-var-team" onchange="renderVarianceReport()" style="width:140px;"><option value="">All Teams</option></select>
+      <select class="inp" id="rpt-var-filter" onchange="renderVarianceReport()" style="width:150px;">
+        <option value="all">All Changes</option>
+        <option value="spike">Spikes only (&gt;30%)</option>
+        <option value="drop">Drops only (&gt;30%)</option>
+        <option value="new">New entries</option>
+        <option value="zero">Went zero</option>
+      </select>
+      <button class="btn btn-excel" onclick="exportTableXLSX('rpt-var-thead','rpt-var-tbody','Variance_Report')">📥 Excel</button>
+    </div>
+  </div>
+  <div id="rpt-var-summary" class="stats-strip" style="max-width:700px;margin-bottom:14px;grid-template-columns:repeat(4,1fr);"></div>
+  <div class="tbl-wrap" style="max-height:72vh;"><table class="tbl"><thead id="rpt-var-thead"></thead><tbody id="rpt-var-tbody"></tbody></table></div>
+</div>
+
+<!-- ══ BUDGET TRACKER ══ -->
+<div id="page-rpt-budget" class="page">
+  <div class="ph">
+    <div><div class="ph-title">💰 FY Budget Tracker</div><div class="ph-sub">Set monthly budget per team and track actuals</div></div>
+    <div class="ph-actions">
+      <select class="inp" id="rpt-bud-fy" onchange="renderBudgetReport()" style="width:130px;"></select>
+      <button class="btn btn-amber" onclick="openBudgetEdit()">✏️ Set Budgets</button>
+      <button class="btn btn-excel" onclick="exportTableXLSX('rpt-bud-thead','rpt-bud-tbody','Budget_Report')">📥 Excel</button>
+    </div>
+  </div>
+  <div id="rpt-bud-summary" class="stats-strip" style="max-width:700px;margin-bottom:14px;grid-template-columns:repeat(4,1fr);"></div>
+  <div style="margin-bottom:14px;" class="card"><div class="card-title"><span class="dot" style="background:var(--accent);"></span>Budget vs Actual by Team</div><div id="rpt-bud-chart" class="ch-lg"></div></div>
+  <div class="tbl-wrap"><table class="tbl"><thead id="rpt-bud-thead"></thead><tbody id="rpt-bud-tbody"></tbody></table></div>
+</div>
+
+<!-- ══ RECOVERY RATE ══ -->
+<div id="page-rpt-recovery" class="page">
+  <div class="ph">
+    <div><div class="ph-title">🔄 Deduction Recovery Rate</div><div class="ph-sub">% of TA claim recovered via deduction, by team and month</div></div>
+    <div class="ph-actions">
+      <select class="inp" id="rpt-rec-fy" onchange="renderRecoveryReport()" style="width:130px;"></select>
+      <select class="inp" id="rpt-rec-team" onchange="renderRecoveryReport()" style="width:140px;"><option value="">All Teams</option></select>
+      <button class="btn btn-excel" onclick="exportTableXLSX('rpt-rec-thead','rpt-rec-tbody','Recovery_Report')">📥 Excel</button>
+    </div>
+  </div>
+  <div id="rpt-rec-summary" class="stats-strip" style="max-width:700px;margin-bottom:14px;grid-template-columns:repeat(4,1fr);"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--green);"></span>Recovery Rate Trend</div><div id="rpt-rec-trend" class="ch-lg"></div></div>
+    <div class="card"><div class="card-title"><span class="dot" style="background:var(--teal);"></span>Recovery by Team</div><div id="rpt-rec-team-chart" class="ch-lg"></div></div>
+  </div>
+  <div class="tbl-wrap"><table class="tbl"><thead id="rpt-rec-thead"></thead><tbody id="rpt-rec-tbody"></tbody></table></div>
+</div>
+
+<!-- ══ BUDGET EDIT MODAL ══ -->
+<div id="budget-modal" class="modal-ov" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal-box modal-box-sm" onclick="event.stopPropagation()">
+    <div class="modal-hdr">
+      <div><div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;">💰 Set Monthly Budgets</div><div style="font-size:12px;color:var(--muted);margin-top:2px;">Per team monthly TA budget (₹)</div></div>
+      <button class="modal-close" onclick="document.getElementById('budget-modal').style.display='none'">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="budget-form-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
+      <div style="display:flex;gap:8px;margin-top:18px;justify-content:flex-end;">
+        <button class="btn btn-ghost" onclick="document.getElementById('budget-modal').style.display='none'">Cancel</button>
+        <button class="btn btn-primary" onclick="saveBudgets()">Save Budgets</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ══ UPLOAD ══ -->
@@ -759,8 +893,8 @@ function loadDB(){ try{ const s=localStorage.getItem('travelxp_v5'); if(s) DB=JS
 
 // ═══════════════════════════════════════════════════
 //  NAVIGATE
-// ═══════════════════════════════════════════════════
-const RENDERERS = { dashboard:renderDashboard, insights:renderInsights, active:renderActive, resigned:renderResigned, compare:renderCompare, 'rpt-team':renderTeamReport,'rpt-monthly':renderMonthlyReport,'rpt-desig':renderDesigReport, heatmap:renderHeatmap, export:renderExportPage, gascode:renderGASCode };
+// ══════════════════════════════════════════════════
+const RENDERERS = { dashboard:renderDashboard, insights:renderInsights, active:renderActive, resigned:renderResigned, compare:renderCompare, 'rpt-team':renderTeamReport,'rpt-monthly':renderMonthlyReport,'rpt-desig':renderDesigReport,'rpt-accounting':renderAccountingReport, heatmap:renderHeatmap, 'rpt-manager':renderManagerReport,'rpt-variance':renderVarianceReport,'rpt-budget':renderBudgetReport,'rpt-recovery':renderRecoveryReport, export:renderExportPage, gascode:renderGASCode };
 function navigate(page){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active')); const el=document.getElementById('page-'+page); if(el) el.classList.add('active'); document.querySelectorAll('.sb-item').forEach(n=>{ if(n.getAttribute('onclick')?.includes("'"+page+"'")) n.classList.add('active'); }); if(RENDERERS[page]) RENDERERS[page](); }
 
 // ═══════════════════════════════════════════════════
@@ -783,115 +917,280 @@ function populateFYSelect(id){ const el=document.getElementById(id); if(!el) ret
   el.innerHTML=opts.join(''); }
 
 // ═══════════════════════════════════════════════════
-//  CHART HELPERS
 // ═══════════════════════════════════════════════════
-function renderBarSVG(id, data, field='value', opts={}){
-  const el=document.getElementById(id); if(!el||!data.length) return;
-  const max=Math.max(...data.map(d=>d[field]||0),1);
-  const W=el.clientWidth||560, H=opts.h||(el.classList.contains('ch-lg')?280:el.classList.contains('ch-xl')?320:220), PAD_L=opts.padL||48, PAD_B=30;
-  const barArea=W-PAD_L-12; const n=data.length;
-  const barGW=Math.floor(barArea/n); const barW=Math.max(8,Math.min(opts.maxBar||42,Math.floor(barGW*0.55)));
-  const gridLines=[0,.2,.4,.6,.8,1].map(frac=>{
-    const y=H-PAD_B-Math.round(frac*(H-PAD_B-10)); const val=Math.round(max*frac);
-    const lbl=val>=100000?`₹${(val/100000).toFixed(1)}L`:val>=1000?`₹${Math.round(val/1000)}k`:val>0?`₹${val}`:'₹0';
-    return `<line x1="${PAD_L}" y1="${y}" x2="${W-4}" y2="${y}" stroke="#e4e8f0" stroke-width="1" stroke-dasharray="4,3"/>
-      <text x="${PAD_L-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#7a84aa" font-family="Outfit">${lbl}</text>`;
-  }).join('');
-  const bars=data.map((d,i)=>{
-    const bh=Math.max(2,Math.round((d[field]||0)/max*(H-PAD_B-10)));
-    const x=PAD_L+i*barGW+(barGW-barW)/2; const y=H-PAD_B-bh;
-    const color=opts.colors?opts.colors[i%opts.colors.length]:C[i%C.length];
-    const lbl=(d.label||d.name||''); const shortLbl=lbl.length>8?lbl.slice(0,7)+'…':lbl;
-    const valLbl=fmtINRK(d[field]);
-    return `<rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="4" fill="${color}" opacity=".88"/>
-      <rect x="${x}" y="${y}" width="${barW}" height="4" rx="2" fill="${color}"/>
-      <text x="${x+barW/2}" y="${H-PAD_B+13}" text-anchor="middle" font-size="9" fill="#7a84aa" font-family="Outfit">${shortLbl}</text>
-      ${d[field]?`<text x="${x+barW/2}" y="${y-4}" text-anchor="middle" font-size="9" fill="${color}" font-family="DM Mono" font-weight="500">${valLbl}</text>`:''}`;
-  }).join('');
-  el.innerHTML=`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}">${gridLines}${bars}</svg>`;
+//  CHART HELPERS (Chart.js)
+// ═══════════════════════════════════════════════════
+
+// Track chart instances to destroy before re-render
+const _charts = {};
+function _destroyChart(id) { if(_charts[id]){ _charts[id].destroy(); delete _charts[id]; } }
+
+// Currency formatter for chart tooltips/ticks
+const fmtTick = v => v>=100000?`₹${(v/100000).toFixed(1)}L`:v>=1000?`₹${Math.round(v/1000)}k`:`₹${v}`;
+
+// Common Chart.js options shared across charts
+function _baseOpts(overrides={}) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 400 },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label||''}: ${fmtTick(ctx.parsed.y??ctx.parsed.x??ctx.raw)}`
+        }
+      }
+    },
+    ...overrides
+  };
 }
 
-function renderGroupedBarSVG(id, data, groupKeys, labels, groupColors, h){
-  const el=document.getElementById(id); if(!el||!data.length) return;
-  const H=h||( el.classList.contains('ch-lg')?280:el.classList.contains('ch-xl')?320:220 );
-  const W=el.clientWidth||540, PAD_L=44, PAD_B=30;
-  const max=Math.max(...data.flatMap(d=>d.vals),1);
-  const n=data.length, ng=groupKeys.length;
-  const grpW=Math.floor((W-PAD_L-12)/n);
-  const barW=Math.max(5,Math.floor(grpW*0.7/ng)); const grpPad=Math.floor(grpW*0.14);
-  const gridLines=[0,.2,.4,.6,.8,1].map(frac=>{
-    const y=H-PAD_B-Math.round(frac*(H-PAD_B-10)); const val=Math.round(max*frac);
-    const lbl=val>=100000?`₹${(val/100000).toFixed(1)}L`:val>=1000?`₹${Math.round(val/1000)}k`:'₹0';
-    return `<line x1="${PAD_L}" y1="${y}" x2="${W-4}" y2="${y}" stroke="#e4e8f0" stroke-width="1" stroke-dasharray="4,3"/>
-      <text x="${PAD_L-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#7a84aa">${lbl}</text>`;
-  }).join('');
-  const bars=data.map((d,i)=>{
-    const gx=PAD_L+i*grpW+grpPad;
-    return d.vals.map((v,gi)=>{
-      const bh=Math.max(2,Math.round(v/max*(H-PAD_B-10)));
-      const x=gx+gi*(barW+2); const y=H-PAD_B-bh;
-      return `<rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="3" fill="${groupColors[gi%groupColors.length]}" opacity=".86"/>`;
-    }).join('')+`<text x="${PAD_L+i*grpW+grpW/2}" y="${H-PAD_B+13}" text-anchor="middle" font-size="8.5" fill="#7a84aa">${(d.label||'').slice(0,9)}</text>`;
-  }).join('');
-  const legend=groupKeys.map((k,i)=>`<rect x="${8+i*65}" y="4" width="9" height="9" rx="2" fill="${groupColors[i]}"/><text x="${20+i*65}" y="12" font-size="9.5" fill="#3a4060" font-family="Outfit">${labels[i]||k}</text>`).join('');
-  el.innerHTML=`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}">${gridLines}${bars}<g>${legend}</g></svg>`;
+function _yAxisINR(stacked=false) {
+  return {
+    stacked,
+    ticks: {
+      callback: fmtTick,
+      maxTicksLimit: 6,
+      color: '#7a84aa',
+      font: { family: 'Outfit', size: 11 }
+    },
+    grid: { color: 'rgba(200,208,230,0.25)' },
+    border: { display: false }
+  };
+}
+function _xAxis(stacked=false) {
+  return {
+    stacked,
+    ticks: {
+      color: '#7a84aa',
+      font: { family: 'Outfit', size: 11 },
+      maxRotation: 40,
+      autoSkip: true,
+      maxTicksLimit: 18
+    },
+    grid: { display: false },
+    border: { display: false }
+  };
 }
 
-function renderHorizBars(id, data, opts={}){
-  const el=document.getElementById(id); if(!el||!data.length) return;
-  const max=Math.max(...data.map(d=>d.value),1);
-  el.innerHTML=data.map((d,i)=>`
-    <div style="margin-bottom:9px;">
-      <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
-        <span style="font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:${opts.maxW||200}px;">${d.label}</span>
-        <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);">${fmtINRF(d.value)}</span>
+// Ensure a canvas exists inside the element
+function _ensureCanvas(id) {
+  const el = document.getElementById(id);
+  if (!el) return null;
+  _destroyChart(id);
+  // set a reasonable height on the wrapper
+  const h = el.classList.contains('ch-xl') ? 320 : el.classList.contains('ch-lg') ? 280 : el.classList.contains('ch-md') ? 220 : (parseInt(el.style.minHeight)||220);
+  el.style.position = 'relative';
+  el.style.height = h + 'px';
+  el.innerHTML = `<canvas id="cvs_${id}" role="img" aria-label="Chart for ${id}"></canvas>`;
+  return document.getElementById('cvs_' + id);
+}
+
+// Vertical bar chart — data = [{label, value}]
+function renderBarSVG(id, data, field='value', opts={}) {
+  const cvs = _ensureCanvas(id); if (!cvs || !data.length) return;
+  const colors = opts.colors || C;
+  _charts[id] = new Chart(cvs, {
+    type: 'bar',
+    data: {
+      labels: data.map(d => d.label||d.name||''),
+      datasets: [{
+        label: 'TA Claim',
+        data: data.map(d => d[field]||0),
+        backgroundColor: data.map((_,i) => colors[i%colors.length] + 'dd'),
+        borderColor: data.map((_,i) => colors[i%colors.length]),
+        borderWidth: 1.5,
+        borderRadius: 5,
+        borderSkipped: false
+      }]
+    },
+    options: _baseOpts({
+      scales: { x: _xAxis(), y: _yAxisINR() }
+    })
+  });
+}
+
+// Grouped bar chart — data = [{label, vals:[v1,v2,...]}], groupKeys=field names, labels=display labels
+function renderGroupedBarSVG(id, data, groupKeys, labels, groupColors, h) {
+  const cvs = _ensureCanvas(id); if (!cvs || !data.length) return;
+  _charts[id] = new Chart(cvs, {
+    type: 'bar',
+    data: {
+      labels: data.map(d => d.label||''),
+      datasets: groupKeys.map((k, gi) => ({
+        label: labels[gi]||k,
+        data: data.map(d => d.vals[gi]||0),
+        backgroundColor: groupColors[gi%groupColors.length] + 'cc',
+        borderColor: groupColors[gi%groupColors.length],
+        borderWidth: 1.5,
+        borderRadius: 4,
+        borderSkipped: false
+      }))
+    },
+    options: _baseOpts({
+      plugins: {
+        legend: { display: true, position: 'top',
+          labels: { boxWidth: 12, boxHeight: 12, borderRadius: 3, useBorderRadius: true,
+            color: '#3a4060', font: { family: 'Outfit', size: 11 }, padding: 16 }
+        },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${fmtTick(ctx.parsed.y)}` } }
+      },
+      scales: { x: _xAxis(), y: _yAxisINR() }
+    })
+  });
+}
+
+// Horizontal bar chart — data = [{label, value, sub?}]
+function renderHorizBars(id, data, opts={}) {
+  const el = document.getElementById(id); if (!el || !data.length) return;
+  _destroyChart(id);
+  const h = Math.max(data.length * 42 + 60, 180);
+  el.style.position = 'relative';
+  el.style.height = h + 'px';
+  el.innerHTML = `<canvas id="cvs_${id}" role="img" aria-label="Horizontal bar chart for ${id}"></canvas>`;
+  const cvs = document.getElementById('cvs_' + id);
+  _charts[id] = new Chart(cvs, {
+    type: 'bar',
+    data: {
+      labels: data.map(d => d.label),
+      datasets: [{
+        label: 'Amount',
+        data: data.map(d => d.value),
+        backgroundColor: C.map(c => c + 'cc'),
+        borderColor: C,
+        borderWidth: 1.5,
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options: _baseOpts({
+      indexAxis: 'y',
+      scales: {
+        y: {
+          ticks: { color: '#7a84aa', font: { family: 'Outfit', size: 11 }, mirror: false },
+          grid: { display: false }, border: { display: false }
+        },
+        x: {
+          ticks: { callback: fmtTick, maxTicksLimit: 5, color: '#7a84aa', font: { family: 'Outfit', size: 10 } },
+          grid: { color: 'rgba(200,208,230,0.25)' }, border: { display: false }
+        }
+      }
+    })
+  });
+}
+
+// Donut chart — data = [{label, value}]
+function renderDonutSVG(id, data) {
+  const el = document.getElementById(id); if (!el || !data.length) return;
+  _destroyChart(id);
+  const h = el.classList.contains('ch-lg') ? 280 : 220;
+  el.style.height = h + 'px';
+
+  const total = data.reduce((s,d)=>s+d.value,0)||1;
+  const topData = data.slice(0,9);
+
+  // Build legend HTML above canvas
+  const legendHTML = topData.map((d,i)=>`
+    <span style="display:flex;align-items:center;gap:5px;font-size:11.5px;margin-bottom:3px;min-width:0;">
+      <span style="width:10px;height:10px;border-radius:50%;background:${C[i%C.length]};flex-shrink:0;"></span>
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;flex:1;">${d.label}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:10px;color:#7a84aa;flex-shrink:0;">${Math.round(d.value/total*100)}%</span>
+    </span>`).join('');
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;height:100%;">
+      <div style="position:relative;width:160px;height:${h}px;flex-shrink:0;">
+        <canvas id="cvs_${id}" role="img" aria-label="Donut chart showing team distribution"></canvas>
       </div>
-      <div class="pbar" style="height:${opts.h||8}px;"><div class="pbar-fill" style="width:${Math.round(d.value/max*100)}%;height:${opts.h||8}px;background:${C[i%C.length]};"></div></div>
-      ${opts.sub&&d.sub?`<div style="font-size:10px;color:var(--muted);margin-top:1px;">${d.sub}</div>`:''}
-    </div>`).join('');
+      <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;padding:4px 0;">${legendHTML}</div>
+    </div>`;
+
+  const cvs = document.getElementById('cvs_' + id);
+  _charts[id] = new Chart(cvs, {
+    type: 'doughnut',
+    data: {
+      labels: topData.map(d=>d.label),
+      datasets: [{
+        data: topData.map(d=>d.value),
+        backgroundColor: topData.map((_,i)=>C[i%C.length]+'dd'),
+        borderColor: topData.map((_,i)=>C[i%C.length]),
+        borderWidth: 2,
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      cutout: '62%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: {
+          label: ctx => ` ${ctx.label}: ${fmtTick(ctx.raw)} (${Math.round(ctx.raw/total*100)}%)`
+        }}
+      }
+    }
+  });
 }
 
-function renderDonutSVG(id, data){
-  const el=document.getElementById(id); if(!el||!data.length) return;
-  const H=el.classList.contains('ch-lg')?280:220;
-  const total=data.reduce((s,d)=>s+d.value,0)||1;
-  let offset=0; const r=62, cx=90, cy=H/2;
-  const segs=data.map((d,i)=>{
-    const pct=d.value/total, angle=pct*360;
-    const s1=offset*Math.PI/180, s2=(offset+angle)*Math.PI/180; offset+=angle;
-    const x1=cx+r*Math.sin(s1),y1=cy-r*Math.cos(s1),x2=cx+r*Math.sin(s2),y2=cy-r*Math.cos(s2);
-    const large=angle>180?1:0;
-    return `<path d="M${cx},${cy} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${large},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${C[i%C.length]}" opacity=".9"><title>${d.label}: ${fmtINRF(d.value)} (${Math.round(pct*100)}%)</title></path>`;
-  }).join('');
-  const inner=`<circle cx="${cx}" cy="${cy}" r="40" fill="white"/><text x="${cx}" y="${cy+4}" text-anchor="middle" font-size="13" font-weight="700" fill="#0a0e1a" font-family="Fraunces">${data.length}</text><text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="9" fill="#7a84aa" font-family="Outfit">teams</text>`;
-  const W=el.clientWidth||400;
-  const legend=data.slice(0,9).map((d,i)=>`<div style="display:flex;align-items:center;gap:5px;font-size:11.5px;margin-bottom:4px;"><span style="width:9px;height:9px;border-radius:50%;background:${C[i%C.length]};flex-shrink:0;"></span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;">${d.label}</span><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);">${Math.round(d.value/total*100)}%</span></div>`).join('');
-  el.innerHTML=`<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;"><svg width="184" height="${H}" viewBox="0 0 184 ${H}" style="flex-shrink:0;">${segs}${inner}</svg><div style="flex:1;display:flex;flex-direction:column;min-width:100px;">${legend}</div></div>`;
+// Mini line chart — data=[{l,v}], renders into the element directly
+function renderMiniLineChart(id, data, color='#1a56db', h=80) {
+  const el = document.getElementById(id); if (!el || !data.length) return;
+  _destroyChart(id);
+  el.style.position = 'relative';
+  el.style.height = h + 'px';
+  el.innerHTML = `<canvas id="cvs_${id}" role="img" aria-label="Mini line chart"></canvas>`;
+  const cvs = document.getElementById('cvs_' + id);
+  _charts[id] = new Chart(cvs, {
+    type: 'line',
+    data: {
+      labels: data.map(d=>d.l),
+      datasets: [{
+        label: 'TA',
+        data: data.map(d=>d.v),
+        borderColor: color,
+        backgroundColor: color + '22',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.35,
+        pointRadius: data.length > 24 ? 0 : 3,
+        pointHoverRadius: 5
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: { duration: 300 },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${fmtTick(ctx.parsed.y)}` } }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: '#7a84aa',
+            font: { family: 'Outfit', size: 9 },
+            maxTicksLimit: h > 120 ? 18 : 12,
+            maxRotation: 40,
+            autoSkip: true
+          },
+          grid: { display: false }, border: { display: false }
+        },
+        y: {
+          display: h > 60,
+          ticks: { callback: fmtTick, maxTicksLimit: 4, color: '#7a84aa', font: { size: 9 } },
+          grid: { color: 'rgba(200,208,230,0.2)' }, border: { display: false }
+        }
+      }
+    }
+  });
 }
 
-function renderMiniLineChart(id, data, color='#1a56db', h=80){
-  const el=document.getElementById(id); if(!el||!data.length) return;
-  const W=el.clientWidth||500, H=h;
-  const max=Math.max(...data.map(d=>d.v),1);
-  const step=(W-24)/(data.length-1||1);
-  const pts=data.map((d,i)=>`${12+i*step},${H-10-Math.round(d.v/max*(H-20))}`).join(' ');
-  const area=`${12},${H-10} ${pts} ${12+(data.length-1)*step},${H-10}`;
-  el.innerHTML=`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}">
-    <defs><linearGradient id="lg${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity=".3"/><stop offset="100%" stop-color="${color}" stop-opacity=".02"/></linearGradient></defs>
-    <polygon points="${area}" fill="url(#lg${id})"/>
-    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-    ${data.map((d,i)=>{const x=12+i*step,y=H-10-Math.round(d.v/max*(H-20));return `<circle cx="${x}" cy="${y}" r="3" fill="${color}" opacity=".8"/>`}).join('')}
-    ${data.map((d,i)=>`<text x="${12+i*step}" y="${H}" text-anchor="middle" font-size="9" fill="#7a84aa">${d.l}</text>`).join('')}
-  </svg>`;
-}
-
+// Sparkline (inline SVG kept — these are tiny inline cells, Chart.js is too heavy for them)
 function sparklineSVG(vals, color='#1a56db', w=60, h=22){
   if(!vals||!vals.length) return '';
   const max=Math.max(...vals,1), step=w/(vals.length-1||1);
   const pts=vals.map((v,i)=>`${i*step},${h-2-Math.round(v/max*(h-4))}`).join(' ');
   return `<svg class="sparkline" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linejoin="round"/></svg>`;
 }
-
 // ═══════════════════════════════════════════════════
 //  DASHBOARD
 // ═══════════════════════════════════════════════════
@@ -931,24 +1230,14 @@ function renderDashboard(){
     {ico:'✅',lbl:'Active w/ Data',val:activeWithTA,sub:`of ${active.length} active`,col:'var(--green)'},
   ].map(k=>`<div class="kpi" style="--kpi-col:${k.col};"><span class="kpi-ic">${k.ico}</span><div class="kpi-lbl">${k.lbl}</div><div class="kpi-val" style="color:${k.col};font-size:${k.raw?'18px':'26px'};">${k.val}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
 
-  // Monthly trend grouped bars
+ // Monthly trend grouped bars
   const monthMap={};
   keys.forEach(k=>{ const[y,m]=k.split('-');const lbl=MONTHS[parseInt(m)-1]+"'"+String(y).slice(2);if(!monthMap[lbl])monthMap[lbl]={paid:0,ded:0};emps.forEach(e=>{monthMap[lbl].paid+=getPaid(e.empId,k);monthMap[lbl].ded+=getDed(e.empId,k);}); });
-  const tl=Object.keys(monthMap), trendPaid=tl.map(l=>monthMap[l].paid), trendDed=tl.map(l=>monthMap[l].ded);
-  const trendMax=Math.max(...trendPaid.map((p,i)=>p+trendDed[i]),1);
-  const el=document.getElementById('chart-trend'); const W2=el?.clientWidth||560,H2=280,PL=48,PB=30;
-  const n2=tl.length||1; const bgW=Math.floor((W2-PL-12)/n2); const bW2=Math.max(4,Math.floor(bgW*0.3)); const gap2=2;
-  const gridY=[0,.2,.4,.6,.8,1].map(f=>{const y=H2-PB-Math.round(f*(H2-PB-10));const v=Math.round(trendMax*f);return `<line x1="${PL}" y1="${y}" x2="${W2-4}" y2="${y}" stroke="#e4e8f0" stroke-width="1" stroke-dasharray="4,3"/><text x="${PL-5}" y="${y+4}" text-anchor="end" font-size="9" fill="#7a84aa">${v>=100000?`₹${(v/100000).toFixed(1)}L`:v>=1000?`₹${Math.round(v/1000)}k`:'₹0'}</text>`;}).join('');
-  const trendBars=tl.map((lbl,i)=>{
-    const ph=Math.max(2,Math.round(trendPaid[i]/trendMax*(H2-PB-10)));
-    const dh=Math.max(2,Math.round(trendDed[i]/trendMax*(H2-PB-10)));
-    const x=PL+i*bgW; const px=x+4,dx=px+bW2+gap2;
-    return `<rect x="${px}" y="${H2-PB-ph}" width="${bW2}" height="${ph}" rx="3" fill="#1a56db" opacity=".87"/>
-      <rect x="${dx}" y="${H2-PB-dh}" width="${bW2}" height="${dh}" rx="3" fill="#dc2626" opacity=".76"/>
-      <text x="${x+bgW/2}" y="${H2-PB+13}" text-anchor="middle" font-size="8.5" fill="#7a84aa">${lbl}</text>`;
-  }).join('');
-  const trendLeg=`<g><rect x="${W2-110}" y="6" width="10" height="10" rx="3" fill="#1a56db" opacity=".87"/><text x="${W2-97}" y="15" font-size="10" fill="#3a4060">Paid</text><rect x="${W2-55}" y="6" width="10" height="10" rx="3" fill="#dc2626" opacity=".76"/><text x="${W2-42}" y="15" font-size="10" fill="#3a4060">Ded</text></g>`;
-  if(el) el.innerHTML=`<svg width="100%" height="${H2}" viewBox="0 0 ${W2} ${H2}">${gridY}${trendBars}${trendLeg}</svg>`;
+  const tl=Object.keys(monthMap);
+  renderGroupedBarSVG('chart-trend',
+    tl.map(lbl=>({label:lbl, vals:[monthMap[lbl].paid, monthMap[lbl].ded]})),
+    ['paid','ded'], ['Paid','Deduction'],
+    ['#1a56db','#dc2626']);
 
   // Team donut
   const teamData=Object.entries(teams).map(([t,es])=>({label:t,value:es.reduce((s,e)=>s+empTotal(e.empId,'ta',keys),0)})).sort((a,b)=>b.value-a.value);
@@ -1182,7 +1471,9 @@ function renderResigned(){
     return 0;
   });
 
-  document.getElementById('res-sub').textContent=`${emps.length} resigned employees`;
+ document.getElementById('res-sub').textContent=`${emps.length} resigned employees`;
+  const resSummaryEl=document.getElementById('res-summary-strip');
+  if(resSummaryEl){const rTA=emps.reduce((s,e)=>s+empTotal(e.empId,'ta',keys),0),rPaid=emps.reduce((s,e)=>s+empTotal(e.empId,'paid',keys),0),rDed=emps.reduce((s,e)=>s+empTotal(e.empId,'ded',keys),0);resSummaryEl.style.gridTemplateColumns='repeat(4,1fr)';resSummaryEl.innerHTML=`<div class="stat-cell"><div class="stat-cell-val" style="color:var(--accent);">${fmtINRK(rTA)}</div><div class="stat-cell-lbl">Total TA</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--green);">${fmtINRK(rPaid)}</div><div class="stat-cell-lbl">Total Paid</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--red);">${fmtINRK(rDed)}</div><div class="stat-cell-lbl">Total Ded</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--muted);">${emps.length}</div><div class="stat-cell-lbl">Resigned</div></div>`;}
   let gTA=0,gPaid=0,gDed=0;
   const rows=emps.map((e,i)=>{
     const ta=empTotal(e.empId,'ta',keys),paid=empTotal(e.empId,'paid',keys),ded=empTotal(e.empId,'ded',keys);
@@ -1287,6 +1578,8 @@ function renderTeamReport(){
     const ded=es.reduce((s,e)=>s+empTotal(e.empId,'ded',keys),0);
     return {label:t,paid,ded,ta:paid+ded,count:es.length,active:es.filter(e=>!isResigned(e)).length};
   }).sort((a,b)=>b.ta-a.ta);
+  const tmTot=data.reduce((s,d)=>s+d.ta,0),tmPaid=data.reduce((s,d)=>s+d.paid,0),tmDed=data.reduce((s,d)=>s+d.ded,0);
+  document.getElementById('rpt-team-summary').innerHTML=`<div class="stat-cell"><div class="stat-cell-val" style="color:var(--accent);">${fmtINRK(tmTot)}</div><div class="stat-cell-lbl">Total TA</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--green);">${fmtINRK(tmPaid)}</div><div class="stat-cell-lbl">Paid</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--red);">${fmtINRK(tmDed)}</div><div class="stat-cell-lbl">Deduction</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--purple);">${data.length}</div><div class="stat-cell-lbl">Teams</div></div>`;
   renderBarSVG('rpt-team-bar',data.map(d=>({label:d.label,value:d.ta})),undefined,{maxBar:48});
   const top4=data.slice(0,4);
   const monthlyByTeam=keys.map(k=>{const[y,m]=k.split('-');return{label:MONTHS[parseInt(m)-1]+"'"+String(y).slice(2),vals:top4.map(d=>teams[d.label].reduce((s,e)=>s+getTA(e.empId,k),0))};});
@@ -1315,6 +1608,8 @@ function renderMonthlyReport(){
     const active=emps.filter(e=>getTA(e.empId,k)>0).length;
     return {label:`${MONTHS[parseInt(m)-1]} ${y}`,shortLbl:MONTHS[parseInt(m)-1]+"'"+String(y).slice(2),paid,ded,ta:paid+ded,active};
   });
+  const mnTot=data.reduce((s,d)=>s+d.ta,0),mnPaid=data.reduce((s,d)=>s+d.paid,0),mnDed=data.reduce((s,d)=>s+d.ded,0),mnPeak=data.reduce((a,d)=>d.ta>a.ta?d:a,{ta:0,label:'—'});
+  document.getElementById('rpt-monthly-summary').innerHTML=`<div class="stat-cell"><div class="stat-cell-val" style="color:var(--accent);">${fmtINRK(mnTot)}</div><div class="stat-cell-lbl">Total TA</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--green);">${fmtINRK(mnPaid)}</div><div class="stat-cell-lbl">Paid</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--red);">${fmtINRK(mnDed)}</div><div class="stat-cell-lbl">Deduction</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--amber);font-size:13px;">${mnPeak.label}</div><div class="stat-cell-lbl">Peak Month</div></div>`;
   renderBarSVG('rpt-monthly-bar',data.map(d=>({label:d.shortLbl,value:d.ta})),undefined,{maxBar:36});
   renderGroupedBarSVG('rpt-monthly-split',data.map(d=>({label:d.shortLbl,vals:[d.paid,d.ded]})),['paid','ded'],['Paid','Ded'],['#059669','#dc2626']);
   document.getElementById('rpt-monthly-thead').innerHTML=`<tr><th>Month</th><th>Emps w/ Data</th><th>Total Paid</th><th>Total Ded</th><th>TA Claim</th><th>Avg / Emp</th></tr>`;
@@ -1338,6 +1633,8 @@ function renderDesigReport(){
     const ded=es.reduce((s,e)=>s+empTotal(e.empId,'ded',keys),0);
     return {label:d,paid,ded,ta:paid+ded,count:es.length};
   }).sort((a,b)=>b.ta-a.ta);
+  const dgTot=data.reduce((s,d)=>s+d.ta,0),dgPaid=data.reduce((s,d)=>s+d.paid,0),dgDed=data.reduce((s,d)=>s+d.ded,0),dgTop=data[0]?.label||'—';
+  document.getElementById('rpt-desig-summary').innerHTML=`<div class="stat-cell"><div class="stat-cell-val" style="color:var(--accent);">${fmtINRK(dgTot)}</div><div class="stat-cell-lbl">Total TA</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--green);">${fmtINRK(dgPaid)}</div><div class="stat-cell-lbl">Paid</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--red);">${fmtINRK(dgDed)}</div><div class="stat-cell-lbl">Deduction</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--purple);font-size:13px;">${dgTop}</div><div class="stat-cell-lbl">Top Designation</div></div>`;
   renderHorizBars('rpt-desig-chart',data.slice(0,10),{maxW:170,h:10});
   renderBarSVG('rpt-desig-avg',data.map(d=>({label:d.label,value:d.count?Math.round(d.ta/d.count):0})),undefined,{maxBar:36});
   document.getElementById('rpt-desig-thead').innerHTML=`<tr><th>Designation</th><th>Count</th><th>Total Paid</th><th>Total Ded</th><th>TA Claim</th><th>Avg / Emp</th><th>Ded%</th></tr>`;
@@ -1349,6 +1646,260 @@ function renderDesigReport(){
     <td style="font-family:'DM Mono',monospace;font-size:11.5px;color:var(--muted);">${fmtINRF(d.count?Math.round(d.ta/d.count):0)}</td>
     <td><span style="font-size:11px;font-weight:700;color:var(--amber);">${d.ta?Math.round(d.ded/d.ta*100):0}%</span></td>
   </tr>`).join('');
+}
+
+// ═══════════════════════════════════════════════════
+//  ACCOUNTING REPORT
+// ═══════════════════════════════════════════════════
+
+// Designation group detection
+// Group +2: TM, ABM, ABMT, MT, Area Nutrition Manager, C&E, SM
+// Group +1: CH, OSH, SH, RSM, ZSM, STH
+// Group  0: PMT designations (same month)
+
+const ACC_GROUP2_CODES = ['TM','ABM','ABMT','MT','ANM','CE','C&E','SM'];
+const ACC_GROUP1_CODES = ['CH','OSH','SH','RSM','ZSM','STH'];
+
+function getAccGroup(emp) {
+  const sd = (shortDesig(emp)||'').trim().toUpperCase();
+  const dept = (emp.department||'').toLowerCase();
+  const desig = (emp.designation||'').toLowerCase();
+
+  // PMT check first (department or designation contains pmt/product management)
+  if(dept.includes('pmt') || dept.includes('product management') ||
+     desig.includes('product management') || desig.includes('pmt')) {
+    return 'group0';
+  }
+
+  // Check short designation against group lists
+  if(ACC_GROUP2_CODES.includes(sd)) return 'group2';
+  if(ACC_GROUP1_CODES.includes(sd)) return 'group1';
+
+  // Fallback: check full designation keywords
+  const dLow = desig;
+  if(dLow.includes('territory manager')||dLow.includes('area business manager')||
+     dLow.includes('area business manager trainee')||dLow.includes('management trainee')||
+     dLow.includes('area nutrition manager')||dLow.includes('continuing education')||
+     dLow.includes('sales manager')) return 'group2';
+  if(dLow.includes('cluster head')||dLow.includes('operations head')||
+     dLow.includes('sales head')||dLow.includes('regional sales manager')||
+     dLow.includes('zonal sales manager')||dLow.includes('state head')) return 'group1';
+
+  return 'group2'; // default
+}
+
+function getAccGroupLabel(group) {
+  if(group==='group2') return '+2 Months';
+  if(group==='group1') return '+1 Month';
+  return 'Same Month (PMT)';
+}
+function getAccGroupShort(group) {
+  if(group==='group2') return 'Group+2';
+  if(group==='group1') return 'Group+1';
+  return 'PMT';
+}
+function getAccGroupBadge(group) {
+  if(group==='group2') return 'bg-purple';
+  if(group==='group1') return 'bg-teal';
+  return 'bg-green';
+}
+
+// Given a YYYY-MM key and a group, return accounting month key YYYY-MM
+function getAccountingMonthKey(paidKey, group) {
+  const [y, m] = paidKey.split('-').map(Number);
+  let offset = 0;
+  if(group === 'group2') offset = 2;
+  else if(group === 'group1') offset = 1;
+  const date = new Date(y, m - 1 + offset, 1);
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`;
+}
+
+function keyToLabel(k) {
+  const [y, m] = k.split('-');
+  return `${MONTHS[parseInt(m)-1]} ${y}`;
+}
+
+// Build all accounting rows for given employees and keys
+function buildAccountingRows(emps, keys) {
+  const rows = [];
+  emps.forEach(emp => {
+    const group = getAccGroup(emp);
+    keys.forEach(k => {
+      const paid = getPaid(emp.empId, k);
+      const ded  = getDed(emp.empId, k);
+      const ta   = paid + ded;
+      if(!ta) return; // skip months with no TA
+      const accKey = getAccountingMonthKey(k, group);
+      rows.push({
+        emp, group,
+        paidKey: k,
+        accKey,
+        paidLabel: keyToLabel(k),
+        accLabel:  keyToLabel(accKey),
+        paid, ded, ta
+      });
+    });
+  });
+  return rows;
+}
+
+// Populate accounting month filter dropdown from computed rows
+function populateAccMonthSelect(rows) {
+  const el = document.getElementById('rpt-acc-accmonth'); if(!el) return;
+  const cur = el.value;
+  const months = [...new Set(rows.map(r => r.accKey))].sort();
+  el.innerHTML = `<option value="">All Acc. Months</option>` +
+    months.map(k => `<option value="${k}"${k===cur?' selected':''}>${keyToLabel(k)}</option>`).join('');
+}
+
+function renderAccountingReport() {
+  populateFYSelect('rpt-acc-fy');
+  populateTeamSelect('rpt-acc-team');
+
+  const keys    = getKeysForSelect('rpt-acc-fy');
+  const filterTeam  = document.getElementById('rpt-acc-team')?.value  || '';
+  const filterGroup = document.getElementById('rpt-acc-group')?.value || '';
+  const filterAcc   = document.getElementById('rpt-acc-accmonth')?.value || '';
+
+  let emps = getFilteredEmps();
+  if(filterTeam) emps = emps.filter(e => e.teamWise === filterTeam);
+
+  // Build all rows
+  let rows = buildAccountingRows(emps, keys);
+
+  // Populate acc month dropdown before further filtering
+  populateAccMonthSelect(rows);
+
+  // Apply filters
+  if(filterGroup) rows = rows.filter(r => r.group === filterGroup);
+  if(filterAcc)   rows = rows.filter(r => r.accKey === filterAcc);
+
+  // Sort: accounting month → employee name
+  rows.sort((a, b) => a.accKey.localeCompare(b.accKey) || a.emp.empName.localeCompare(b.emp.empName));
+
+  // Summary
+  const totalTA   = rows.reduce((s,r)=>s+r.ta,0);
+  const totalPaid = rows.reduce((s,r)=>s+r.paid,0);
+  const totalDed  = rows.reduce((s,r)=>s+r.ded,0);
+  const uniqEmps  = new Set(rows.map(r=>r.emp.empId)).size;
+  const uniqAccM  = new Set(rows.map(r=>r.accKey)).size;
+  document.getElementById('acc-summary-strip').innerHTML = `
+    <div style="flex:1;min-width:130px;text-align:center;padding:10px;background:var(--card2);border-radius:10px;">
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--accent);">${fmtINRF(totalTA)}</div>
+      <div style="font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">Total TA Claim</div>
+    </div>
+    <div style="flex:1;min-width:130px;text-align:center;padding:10px;background:var(--card2);border-radius:10px;">
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--green);">${fmtINRF(totalPaid)}</div>
+      <div style="font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">Total Paid</div>
+    </div>
+    <div style="flex:1;min-width:130px;text-align:center;padding:10px;background:var(--card2);border-radius:10px;">
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--red);">${fmtINRF(totalDed)}</div>
+      <div style="font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">Total Deduction</div>
+    </div>
+    <div style="flex:1;min-width:100px;text-align:center;padding:10px;background:var(--card2);border-radius:10px;">
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--purple);">${uniqEmps}</div>
+      <div style="font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">Employees</div>
+    </div>
+    <div style="flex:1;min-width:100px;text-align:center;padding:10px;background:var(--card2);border-radius:10px;">
+      <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:700;color:var(--teal);">${uniqAccM}</div>
+      <div style="font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">Accounting Months</div>
+    </div>`;
+
+  // Table rows — group visually by accounting month
+  let lastAccKey = null;
+  let accGroupTA = 0, accGroupPaid = 0, accGroupDed = 0, accGroupRows = [];
+  const htmlParts = [];
+
+  const flushGroup = () => {
+    if(!accGroupRows.length) return;
+    htmlParts.push(...accGroupRows);
+    htmlParts.push(`<tr style="background:#eef2ff;">
+      <td colspan="8" style="font-family:'Fraunces',serif;font-size:12px;font-weight:700;color:var(--accent);padding:6px 13px;">
+        Subtotal — Accounting Month: ${keyToLabel(lastAccKey)}
+      </td>
+      <td><span class="a-paid">${fmtINRF(accGroupPaid)}</span></td>
+      <td><span class="a-ded">${fmtINRF(accGroupDed)}</span></td>
+      <td><span class="a-ta">${fmtINRF(accGroupTA)}</span></td>
+    </tr>`);
+    accGroupRows = []; accGroupTA = 0; accGroupPaid = 0; accGroupDed = 0;
+  };
+
+  rows.forEach((r, i) => {
+    if(r.accKey !== lastAccKey) {
+      flushGroup();
+      // Accounting month header row
+      htmlParts.push(`<tr style="background:#0a0e1a;">
+        <td colspan="11" style="color:#fff;font-family:'Fraunces',serif;font-size:13px;font-weight:700;padding:9px 13px;letter-spacing:.03em;">
+          📅 Accounting Month: ${keyToLabel(r.accKey)}
+        </td>
+      </tr>`);
+      lastAccKey = r.accKey;
+    }
+    accGroupTA   += r.ta;
+    accGroupPaid += r.paid;
+    accGroupDed  += r.ded;
+    accGroupRows.push(`<tr>
+      <td style="color:var(--muted);font-size:11px;">${i+1}</td>
+      <td><span class="badge ${getTeamBadge(r.emp.teamWise)}">${r.emp.teamWise||'—'}</span></td>
+      <td><span style="font-family:'DM Mono',monospace;color:var(--accent);font-size:12px;">${r.emp.empId}</span></td>
+      <td><div style="display:flex;align-items:center;gap:7px;">${mkAvatar(r.emp)}<span style="font-weight:600;">${r.emp.empName}</span></div></td>
+      <td><span class="badge bg-indigo">${shortDesig(r.emp)}</span></td>
+      <td><span class="badge ${getAccGroupBadge(r.group)}">${getAccGroupShort(r.group)}</span></td>
+      <td style="font-weight:600;color:var(--ink2);">${r.paidLabel}</td>
+      <td style="font-weight:700;color:var(--accent);">${r.accLabel}</td>
+      <td>${r.paid?`<span class="a-paid">${fmtINRF(r.paid)}</span>`:'<span class="a-zero">—</span>'}</td>
+      <td>${r.ded?`<span class="a-ded">${fmtINRF(r.ded)}</span>`:'<span class="a-zero">—</span>'}</td>
+      <td>${r.ta?`<span class="a-ta">${fmtINRF(r.ta)}</span>`:'<span class="a-zero">—</span>'}</td>
+    </tr>`);
+  });
+  flushGroup();
+
+  // Grand total
+  htmlParts.push(`<tr class="tot-row">
+    <td colspan="8" style="font-family:'Fraunces',serif;font-size:13px;">GRAND TOTAL (${rows.length} rows)</td>
+    <td><span class="a-paid">${fmtINRF(totalPaid)}</span></td>
+    <td><span class="a-ded">${fmtINRF(totalDed)}</span></td>
+    <td><span class="a-ta">${fmtINRF(totalTA)}</span></td>
+  </tr>`);
+
+  document.getElementById('rpt-acc-tbody').innerHTML =
+    rows.length ? htmlParts.join('') :
+    `<tr><td colspan="11" style="text-align:center;padding:28px;color:var(--muted);">No data found for selected filters</td></tr>`;
+}
+
+function exportAccountingXLSX() {
+  const keys      = getKeysForSelect('rpt-acc-fy');
+  const filterTeam  = document.getElementById('rpt-acc-team')?.value  || '';
+  const filterGroup = document.getElementById('rpt-acc-group')?.value || '';
+  const filterAcc   = document.getElementById('rpt-acc-accmonth')?.value || '';
+
+  let emps = getFilteredEmps();
+  if(filterTeam) emps = emps.filter(e => e.teamWise === filterTeam);
+
+  let rows = buildAccountingRows(emps, keys);
+  if(filterGroup) rows = rows.filter(r => r.group === filterGroup);
+  if(filterAcc)   rows = rows.filter(r => r.accKey === filterAcc);
+  rows.sort((a,b) => a.accKey.localeCompare(b.accKey) || a.emp.empName.localeCompare(b.emp.empName));
+
+  const data = rows.map((r,i) => ({
+    'Sr No': i+1,
+    'Accounting Month': r.accLabel,
+    'TA Paid Month': r.paidLabel,
+    'Team': r.emp.teamWise || '',
+    'Emp ID': r.emp.empId,
+    'Name': r.emp.empName,
+    'Designation': shortDesig(r.emp),
+    'Group': getAccGroupLabel(r.group),
+    'Paid (₹)': r.paid,
+    'Deduction (₹)': r.ded,
+    'TA Claim (₹)': r.ta
+  }));
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(data);
+  stWS(ws); ws['!cols'] = [{wch:6},{wch:18},{wch:16},{wch:18},{wch:10},{wch:22},{wch:16},{wch:16},{wch:14},{wch:14},{wch:14}];
+  XLSX.utils.book_append_sheet(wb, ws, 'Accounting_Report');
+  dlXL(wb, 'Accounting_Report_' + today());
 }
 
 // ═══════════════════════════════════════════════════
@@ -1487,7 +2038,7 @@ function processXL(file){
   r.onload=ev=>{
     try{
       const wb=XLSX.read(ev.target.result,{type:'binary'}); let counts={mp:0,paid:0,ded:0};
-      if(wb.SheetNames.some(s=>s.toUpperCase()==='MANPOWER')){ const sn=wb.SheetNames.find(s=>s.toUpperCase()==='MANPOWER'); const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn]); rows.forEach(r=>{const empId=String(r['Emp Id']||r['empId']||r['EMP ID']||'').trim();if(!empId) return;const raw={empId,empName:r['Emp Name']||r['empName']||r['NAME']||'',designation:r['Designation']||r['designation']||'',shortDesignation:r['Short Designation']||r['shortDesignation']||'',department:r['Department']||r['department']||'',division:r['Division']||r['division']||'',hq:r['HQ']||r['hq']||'',teamWise:r['Team Wise']||r['teamWise']||r['TEAM']||'',dateOfJoining:fmtDate(r['Date of Joining']||r['dateOfJoining']||''),dateOfResignation:fmtDate(r['Date Of Resignation']||r['dateOfResignation']||''),reportingManagerId:r['Reporting Manager ID']||'',currentPhone:r['Current Phone']||'',officialEmail:r['Official E-Mail Id']||r['Email']||'',gender:r['Gender']||'',age:r['Age']||'',bloodGroup:r['Blood Group']||'',yearsOfExperience:r['Years of Experience']||'',currentCity:r['Current City']||'',currentState:r['Current State']||''};const idx=DB.manpower.findIndex(e=>e.empId===empId);if(idx>-1)DB.manpower[idx]=raw;else DB.manpower.push(raw);if(!DB.paid[empId])DB.paid[empId]={};if(!DB.deduction[empId])DB.deduction[empId]={};counts.mp++;});}
+      if(wb.SheetNames.some(s=>s.toUpperCase()==='MANPOWER')){ const sn=wb.SheetNames.find(s=>s.toUpperCase()==='MANPOWER'); const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn]); rows.forEach(r=>{const empId=String(r['Emp Id']||r['empId']||r['EMP ID']||'').trim();if(!empId) return;const raw={empId,empName:r['Emp Name']||r['empName']||r['NAME']||'',designation:r['Designation']||r['designation']||'',shortDesignation:r['Short Designation']||r['shortDesignation']||'',department:r['Department']||r['department']||'',division:r['Division']||r['division']||'',hq:(()=>{const hqKeys=Object.keys(r);const match=hqKeys.find(k=>/^(hq|head\s*quarter[s]?|headquarter[s]?|hq\s*location|station|location|depot|city|base)$/i.test(k.trim()));return match?String(r[match]||''):'';})(),teamWise:r['Team Wise']||r['teamWise']||r['TEAM']||'',dateOfJoining:fmtDate(r['Date of Joining']||r['dateOfJoining']||''),dateOfResignation:fmtDate(r['Date Of Resignation']||r['dateOfResignation']||''),reportingManagerId:r['Reporting Manager ID']||'',currentPhone:r['Current Phone']||'',officialEmail:r['Official E-Mail Id']||r['Email']||'',gender:r['Gender']||'',age:r['Age']||'',bloodGroup:r['Blood Group']||'',yearsOfExperience:r['Years of Experience']||'',currentCity:r['Current City']||'',currentState:r['Current State']||''};const idx=DB.manpower.findIndex(e=>e.empId===empId);if(idx>-1)DB.manpower[idx]=raw;else DB.manpower.push(raw);if(!DB.paid[empId])DB.paid[empId]={};if(!DB.deduction[empId])DB.deduction[empId]={};counts.mp++;});}
       ['PAID','DEDUCTION'].forEach(shName=>{const sn=wb.SheetNames.find(s=>s.toUpperCase()===shName);if(!sn) return;const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn]);rows.forEach(r=>{const empId=String(r['EMPLOYEE ID']||r['Emp ID']||r['Emp Id']||r['empId']||'').trim();if(!empId) return;const store=shName==='PAID'?DB.paid:DB.deduction;if(!store[empId])store[empId]={};Object.keys(r).forEach(k=>{if(['EMPLOYEE ID','Emp ID','Emp Id','empId','NAME','Name','DESIGNATION','TEAM WISE','Status'].includes(k)) return;let d;const raw=r[k];if(typeof raw==='number'&&raw>40000&&raw<60000){const base=new Date(1900,0,0);base.setDate(base.getDate()+raw-1);d=base;}else d=new Date(raw);if(isNaN(d?.getTime())) return;const mk2=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;if(r[k]) store[empId][mk2]=parseFloat(r[k])||0;if(shName==='PAID')counts.paid++;else counts.ded++;});});});
       saveDB();
       document.getElementById('upload-preview').innerHTML=`<div class="card" style="max-width:460px;"><h4 style="color:var(--green);margin-bottom:10px;font-family:'Fraunces',serif;">✅ Import Successful</h4><p style="margin:3px 0;font-size:13px;">👥 Employees: <strong>${counts.mp}</strong></p><p style="margin:3px 0;font-size:13px;">💵 Paid entries: <strong>${counts.paid}</strong></p><p style="margin:3px 0;font-size:13px;">📋 Deduction entries: <strong>${counts.ded}</strong></p><button class="btn btn-primary" style="margin-top:12px;" onclick="navigate('dashboard')">View Dashboard →</button></div>`;
@@ -1531,7 +2082,7 @@ function j(d){return ContentService.createTextOutput(JSON.stringify(d)).setMimeT
 function getAllData(){return{manpower:getSheet('MANPOWER'),paid:getMatrix('PAID'),deduction:getMatrix('DEDUCTION')};}
 function getSheet(n){const s=SS.getSheetByName(n);if(!s)return[];const d=s.getDataRange().getValues();if(d.length<2)return[];const h=d[0].map(x=>toCamel(String(x)));return d.slice(1).filter(r=>r[0]).map(r=>{const o={};h.forEach((k,i)=>o[k]=r[i]!=null?String(r[i]):'');return o;});}
 function getMatrix(n){const s=SS.getSheetByName(n);if(!s)return{};const d=s.getDataRange().getValues();if(d.length<2)return{};const h=d[0];const res={};d.slice(1).forEach(row=>{const id=String(row[0]||'').trim();if(!id)return;res[id]={};h.forEach((hv,i)=>{if(i<2)return;const dt=new Date(hv);if(isNaN(dt))return;const k=dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0');if(row[i])res[id][k]=row[i];});});return res;}
-function toCamel(s){return s.replace(/(?:^\\w|[A-Z]|\\b\\w)/g,(w,i)=>i===0?w.toLowerCase():w.toUpperCase()).replace(/\\s+/g,'');}
+function toCamel(s){return s.toLowerCase().replace(/(?:^\w|\s+\w)/g,w=>w.trim().toUpperCase()).replace(/\s+/g,'').replace(/^./,c=>c.toLowerCase());}
 function onOpen(){SpreadsheetApp.getUi().createMenu('TravelXP').addItem('Create Sheets','createSheets').addItem('Deploy Help','deployHelp').addToUi();}
 function createSheets(){['MANPOWER','PAID','DEDUCTION'].forEach(n=>{if(!SS.getSheetByName(n))SS.insertSheet(n);});SpreadsheetApp.getUi().alert('Sheets created!');}
 function deployHelp(){SpreadsheetApp.getUi().showModalDialog(HtmlService.createHtmlOutput('<h3>Deploy as Web App</h3><ol><li>Deploy → New deployment</li><li>Type: Web app</li><li>Execute as: Me</li><li>Access: Anyone</li><li>Copy URL</li></ol>').setWidth(360).setHeight(220),'Deploy Instructions');}`;
@@ -1562,6 +2113,199 @@ function seedDemo(){
     });
   }
   saveDB();
+}
+
+// ═══════════════════════════════════════════════════
+//  MANAGER REPORT
+// ═══════════════════════════════════════════════════
+function renderManagerReport(){
+  populateFYSelect('rpt-mgr-fy');
+  const keys=getKeysForSelect('rpt-mgr-fy');
+  const emps=getFilteredEmps();
+  const mgrs={};
+  emps.forEach(e=>{
+    const mid=e.reportingManagerId||'—';
+    const mgr=emps.find(m=>m.empId===mid);
+    const mgrName=mgr?mgr.empName:(mid==='—'?'No Manager':mid);
+    if(!mgrs[mid])mgrs[mid]={mgrId:mid,mgrName,team:mgr?.teamWise||'—',reports:[],ta:0,paid:0,ded:0};
+    mgrs[mid].reports.push(e);
+    mgrs[mid].ta+=empTotal(e.empId,'ta',keys);
+    mgrs[mid].paid+=empTotal(e.empId,'paid',keys);
+    mgrs[mid].ded+=empTotal(e.empId,'ded',keys);
+  });
+  const data=Object.values(mgrs).sort((a,b)=>b.ta-a.ta);
+  const totTA=data.reduce((s,d)=>s+d.ta,0),totPaid=data.reduce((s,d)=>s+d.paid,0),totDed=data.reduce((s,d)=>s+d.ded,0);
+  document.getElementById('rpt-mgr-summary').innerHTML=`<div class="stat-cell"><div class="stat-cell-val" style="color:var(--accent);">${fmtINRK(totTA)}</div><div class="stat-cell-lbl">Total TA</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--green);">${fmtINRK(totPaid)}</div><div class="stat-cell-lbl">Paid</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--red);">${fmtINRK(totDed)}</div><div class="stat-cell-lbl">Deduction</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--purple);">${data.length}</div><div class="stat-cell-lbl">Managers</div></div>`;
+  renderBarSVG('rpt-mgr-bar',data.map(d=>({label:d.mgrName.split(' ')[0],value:d.ta})));
+  renderBarSVG('rpt-mgr-count',data.map(d=>({label:d.mgrName.split(' ')[0],value:d.reports.length})),undefined,{colors:['#7c3aed']});
+  document.getElementById('rpt-mgr-thead').innerHTML=`<tr><th>#</th><th>Manager ID</th><th>Manager Name</th><th>Team</th><th>Direct Reports</th><th>Total TA</th><th>Total Paid</th><th>Total Ded</th><th>Avg / Report</th><th>Ded %</th></tr>`;
+  document.getElementById('rpt-mgr-tbody').innerHTML=data.map((d,i)=>`<tr>
+    <td style="color:var(--muted);font-size:11px;">${i+1}</td>
+    <td><span style="font-family:'DM Mono',monospace;color:var(--accent);font-size:12px;">${d.mgrId}</span></td>
+    <td style="font-weight:600;">${d.mgrName}</td>
+    <td><span class="badge ${getTeamBadge(d.team)}">${d.team}</span></td>
+    <td><span class="badge bg-indigo">${d.reports.length}</span></td>
+    <td><span class="a-ta">${fmtINRF(d.ta)}</span></td>
+    <td><span class="a-paid">${fmtINRF(d.paid)}</span></td>
+    <td><span class="a-ded">${fmtINRF(d.ded)}</span></td>
+    <td style="font-family:'DM Mono',monospace;font-size:11.5px;color:var(--muted);">${fmtINRF(d.reports.length?Math.round(d.ta/d.reports.length):0)}</td>
+    <td><span style="font-size:11px;font-weight:700;color:${d.ta&&d.ded/d.ta>.3?'var(--red)':'var(--amber)'};">${d.ta?Math.round(d.ded/d.ta*100):0}%</span></td>
+  </tr>`).join('');
+}
+
+// ═══════════════════════════════════════════════════
+//  MOM VARIANCE REPORT
+// ═══════════════════════════════════════════════════
+function renderVarianceReport(){
+  populateTeamSelect('rpt-var-team');
+  const allKeys=getAllKeys();
+  // Populate month selector
+  const varMonEl=document.getElementById('rpt-var-month');
+  if(varMonEl){const cur=varMonEl.value;varMonEl.innerHTML=allKeys.map(k=>{const[y,m]=k.split('-');return`<option value="${k}"${k===cur?' selected':''}>${MONTHS[parseInt(m)-1]} ${y}</option>`;}).join('');if(!varMonEl.value&&allKeys.length)varMonEl.value=allKeys[allKeys.length-1];}
+  const selMonth=document.getElementById('rpt-var-month')?.value||allKeys[allKeys.length-1];
+  const prevIdx=allKeys.indexOf(selMonth)-1;
+  const prevMonth=prevIdx>=0?allKeys[prevIdx]:null;
+  const filterTeam=document.getElementById('rpt-var-team')?.value||'';
+  const filterType=document.getElementById('rpt-var-filter')?.value||'all';
+  let emps=getFilteredEmps();
+  if(filterTeam) emps=emps.filter(e=>e.teamWise===filterTeam);
+  let rows=emps.map(e=>{
+    const cur=getTA(e.empId,selMonth);
+    const prev=prevMonth?getTA(e.empId,prevMonth):0;
+    const diff=cur-prev;
+    const pct=prev>0?Math.round(diff/prev*100):(cur>0?100:-100);
+    let type='same';
+    if(!prev&&cur>0) type='new';
+    else if(prev>0&&!cur) type='zero';
+    else if(pct>=30) type='spike';
+    else if(pct<=-30) type='drop';
+    return {e,cur,prev,diff,pct,type};
+  });
+  if(filterType==='spike') rows=rows.filter(r=>r.type==='spike');
+  else if(filterType==='drop') rows=rows.filter(r=>r.type==='drop');
+  else if(filterType==='new') rows=rows.filter(r=>r.type==='new');
+  else if(filterType==='zero') rows=rows.filter(r=>r.type==='zero');
+  rows.sort((a,b)=>Math.abs(b.diff)-Math.abs(a.diff));
+  const spikes=rows.filter(r=>r.type==='spike').length;
+  const drops=rows.filter(r=>r.type==='drop').length;
+  const newEntries=rows.filter(r=>r.type==='new').length;
+  const zeroEntries=rows.filter(r=>r.type==='zero').length;
+  document.getElementById('rpt-var-summary').innerHTML=`<div class="stat-cell"><div class="stat-cell-val" style="color:var(--red);">${spikes}</div><div class="stat-cell-lbl">Spikes &gt;30%</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--amber);">${drops}</div><div class="stat-cell-lbl">Drops &gt;30%</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--green);">${newEntries}</div><div class="stat-cell-lbl">New Entries</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--muted);">${zeroEntries}</div><div class="stat-cell-lbl">Went Zero</div></div>`;
+  const[sy,sm]=selMonth.split('-');
+  const prevLbl=prevMonth?(()=>{const[py,pm]=prevMonth.split('-');return`${MONTHS[parseInt(pm)-1]} ${py}`;})():'—';
+  document.getElementById('rpt-var-thead').innerHTML=`<tr><th>#</th><th>Team</th><th>Emp ID</th><th>Name</th><th>Designation</th><th>${prevLbl}</th><th>${MONTHS[parseInt(sm)-1]} ${sy}</th><th>Change</th><th>Change %</th><th>Flag</th></tr>`;
+  document.getElementById('rpt-var-tbody').innerHTML=rows.map((r,i)=>{
+    const flagCol=r.type==='spike'?'var(--red)':r.type==='drop'?'var(--amber)':r.type==='new'?'var(--green)':r.type==='zero'?'var(--muted)':'var(--teal)';
+    const flagLabel=r.type==='spike'?'⬆ Spike':r.type==='drop'?'⬇ Drop':r.type==='new'?'🆕 New':r.type==='zero'?'⭕ Zero':'✓ Normal';
+    return`<tr>
+      <td style="color:var(--muted);font-size:11px;">${i+1}</td>
+      <td><span class="badge ${getTeamBadge(r.e.teamWise)}">${r.e.teamWise||'—'}</span></td>
+      <td><span style="font-family:'DM Mono',monospace;color:var(--accent);font-size:12px;">${r.e.empId}</span></td>
+      <td style="font-weight:600;">${r.e.empName}</td>
+      <td><span class="badge bg-indigo">${shortDesig(r.e)}</span></td>
+      <td>${r.prev?`<span class="a-ta">${fmtINRF(r.prev)}</span>`:'<span class="a-zero">—</span>'}</td>
+      <td>${r.cur?`<span class="a-ta">${fmtINRF(r.cur)}</span>`:'<span class="a-zero">—</span>'}</td>
+      <td><span style="font-family:'DM Mono',monospace;font-size:12px;color:${r.diff>=0?'var(--green)':'var(--red)'};">${r.diff>=0?'+':''}${fmtINRF(r.diff)}</span></td>
+      <td><span style="font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:${r.diff>=0?'var(--green)':'var(--red)'};">${r.prev>0?(r.pct>=0?'+':'')+r.pct+'%':r.type==='new'?'New':r.type==='zero'?'-100%':'—'}</span></td>
+      <td><span style="font-size:11px;font-weight:700;color:${flagCol};">${flagLabel}</span></td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="10" style="text-align:center;padding:28px;color:var(--muted);">No data</td></tr>';
+}
+
+// ═══════════════════════════════════════════════════
+//  BUDGET TRACKER
+// ═══════════════════════════════════════════════════
+function getBudgets(){try{return JSON.parse(localStorage.getItem('travelxp_budgets')||'{}');}catch(e){return{};}}
+function saveBudgets(){
+  const teams=[...new Set(getFilteredEmps().map(e=>e.teamWise).filter(Boolean))];
+  const budgets={};
+  teams.forEach(t=>{const el=document.getElementById('bud-'+t.replace(/\s/g,'_'));if(el)budgets[t]=parseFloat(el.value)||0;});
+  localStorage.setItem('travelxp_budgets',JSON.stringify(budgets));
+  document.getElementById('budget-modal').style.display='none';
+  toast('Budgets saved','success');
+  renderBudgetReport();
+}
+function openBudgetEdit(){
+  const teams=[...new Set(getFilteredEmps().map(e=>e.teamWise).filter(Boolean))].sort();
+  const budgets=getBudgets();
+  document.getElementById('budget-form-grid').innerHTML=teams.map(t=>`<div><label class="inp-lbl">${t}</label><input class="inp" id="bud-${t.replace(/\s/g,'_')}" type="number" placeholder="Monthly budget ₹" value="${budgets[t]||''}"/></div>`).join('');
+  document.getElementById('budget-modal').style.display='flex';
+}
+function renderBudgetReport(){
+  populateFYSelect('rpt-bud-fy');
+  const keys=getKeysForSelect('rpt-bud-fy');
+  const emps=getFilteredEmps();
+  const teams=groupBy(emps,'teamWise');
+  const budgets=getBudgets();
+  const data=Object.entries(teams).map(([t,es])=>{
+    const actual=es.reduce((s,e)=>s+empTotal(e.empId,'ta',keys),0);
+    const monthlyBudget=budgets[t]||0;
+    const totalBudget=monthlyBudget*keys.length;
+    const util=totalBudget?Math.round(actual/totalBudget*100):null;
+    return{team:t,actual,monthlyBudget,totalBudget,util,over:totalBudget&&actual>totalBudget};
+  }).sort((a,b)=>b.actual-a.actual);
+  const totActual=data.reduce((s,d)=>s+d.actual,0);
+  const totBudget=data.reduce((s,d)=>s+d.totalBudget,0);
+  const overCount=data.filter(d=>d.over).length;
+  const utilPct=totBudget?Math.round(totActual/totBudget*100):0;
+  document.getElementById('rpt-bud-summary').innerHTML=`<div class="stat-cell"><div class="stat-cell-val" style="color:var(--accent);">${fmtINRK(totActual)}</div><div class="stat-cell-lbl">Total Actual</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--teal);">${fmtINRK(totBudget)}</div><div class="stat-cell-lbl">Total Budget</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:${utilPct>100?'var(--red)':'var(--green)'};">${totBudget?utilPct+'%':'—'}</div><div class="stat-cell-lbl">Utilisation</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--red);">${overCount}</div><div class="stat-cell-lbl">Over Budget</div></div>`;
+  renderGroupedBarSVG('rpt-bud-chart',data.map(d=>({label:d.team.slice(0,12),vals:[d.actual,d.totalBudget]})),['actual','budget'],['Actual','Budget'],['#1a56db','#d1fae5']);
+  document.getElementById('rpt-bud-thead').innerHTML=`<tr><th>Team</th><th>Monthly Budget</th><th>Total Budget (${keys.length}mo)</th><th>Actual TA</th><th>Variance</th><th>Utilisation %</th><th>Status</th></tr>`;
+  document.getElementById('rpt-bud-tbody').innerHTML=data.map(d=>`<tr>
+    <td><span class="badge ${getTeamBadge(d.team)}">${d.team}</span></td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px;">${d.monthlyBudget?fmtINRF(d.monthlyBudget):'<span class="a-zero">Not set</span>'}</td>
+    <td style="font-family:'DM Mono',monospace;font-size:12px;">${d.totalBudget?fmtINRF(d.totalBudget):'<span class="a-zero">—</span>'}</td>
+    <td><span class="a-ta">${fmtINRF(d.actual)}</span></td>
+    <td><span style="font-family:'DM Mono',monospace;font-size:12px;color:${d.totalBudget?(d.over?'var(--red)':'var(--green)'):'var(--muted)'};">${d.totalBudget?(d.over?'+':'')+fmtINRF(d.actual-d.totalBudget):'—'}</span></td>
+    <td><span style="font-weight:700;color:${d.util===null?'var(--muted)':d.util>100?'var(--red)':d.util>80?'var(--amber)':'var(--green)'};">${d.util!==null?d.util+'%':'—'}</span></td>
+    <td>${d.totalBudget?`<span class="badge ${d.over?'bg-red':'bg-green'}">${d.over?'Over Budget':'Within Budget'}</span>`:'<span class="badge bg-gray">No Budget</span>'}</td>
+  </tr>`).join('');
+}
+
+// ═══════════════════════════════════════════════════
+//  RECOVERY RATE REPORT
+// ═══════════════════════════════════════════════════
+function renderRecoveryReport(){
+  populateFYSelect('rpt-rec-fy');
+  populateTeamSelect('rpt-rec-team');
+  const keys=getKeysForSelect('rpt-rec-fy');
+  const filterTeam=document.getElementById('rpt-rec-team')?.value||'';
+  let emps=getFilteredEmps();
+  if(filterTeam) emps=emps.filter(e=>e.teamWise===filterTeam);
+  // Monthly recovery rate
+  const monthData=keys.map(k=>{
+    const[y,m]=k.split('-');
+    const paid=emps.reduce((s,e)=>s+getPaid(e.empId,k),0);
+    const ded=emps.reduce((s,e)=>s+getDed(e.empId,k),0);
+    const ta=paid+ded;
+    const rate=ta?Math.round(Math.abs(ded)/ta*100):0;
+    return{label:MONTHS[parseInt(m)-1]+"'"+String(y).slice(2),k,paid,ded:Math.abs(ded),ta,rate};
+  });
+  const totTA=monthData.reduce((s,d)=>s+d.ta,0);
+  const totDed=monthData.reduce((s,d)=>s+d.ded,0);
+  const avgRate=totTA?Math.round(totDed/totTA*100):0;
+  const maxRate=Math.max(...monthData.map(d=>d.rate),0);
+  const minRate=Math.min(...monthData.filter(d=>d.rate>0).map(d=>d.rate),100);
+  document.getElementById('rpt-rec-summary').innerHTML=`<div class="stat-cell"><div class="stat-cell-val" style="color:var(--accent);">${avgRate}%</div><div class="stat-cell-lbl">Avg Recovery Rate</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--red);">${maxRate}%</div><div class="stat-cell-lbl">Peak Rate</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--green);">${minRate===100?'—':minRate+'%'}</div><div class="stat-cell-lbl">Lowest Rate</div></div><div class="stat-cell"><div class="stat-cell-val" style="color:var(--amber);">${fmtINRK(totDed)}</div><div class="stat-cell-lbl">Total Recovered</div></div>`;
+  // Trend line
+  renderMiniLineChart('rpt-rec-trend',monthData.map(d=>({l:d.label,v:d.rate})),'#059669',280);
+  // Team bar
+  const teams=groupBy(emps,'teamWise');
+  const teamRecData=Object.entries(teams).map(([t,es])=>{
+    const ta=keys.reduce((s,k)=>s+es.reduce((ss,e)=>ss+getTA(e.empId,k),0),0);
+    const ded=Math.abs(keys.reduce((s,k)=>s+es.reduce((ss,e)=>ss+getDed(e.empId,k),0),0));
+    return{label:t,value:ta?Math.round(ded/ta*100):0};
+  }).sort((a,b)=>b.value-a.value);
+  renderBarSVG('rpt-rec-team-chart',teamRecData,undefined,{colors:['#059669']});
+  document.getElementById('rpt-rec-thead').innerHTML=`<tr><th>Month</th><th>Total TA</th><th>Total Paid</th><th>Deduction Recovered</th><th>Recovery Rate</th><th>Status</th></tr>`;
+  document.getElementById('rpt-rec-tbody').innerHTML=monthData.map(d=>`<tr>
+    <td style="font-weight:600;">${d.label}</td>
+    <td><span class="a-ta">${fmtINRF(d.ta)}</span></td>
+    <td><span class="a-paid">${fmtINRF(d.paid)}</span></td>
+    <td><span class="a-ded">${fmtINRF(d.ded)}</span></td>
+    <td><span style="font-family:'DM Mono',monospace;font-weight:700;font-size:13px;color:${d.rate>40?'var(--red)':d.rate>20?'var(--amber)':'var(--green)'};">${d.rate}%</span></td>
+    <td><span class="badge ${d.rate>40?'bg-red':d.rate>20?'bg-amber':'bg-green'}">${d.rate>40?'High Recovery':d.rate>20?'Moderate':'Low Recovery'}</span></td>
+  </tr>`).join('');
 }
 
 // ═══════════════════════════════════════════════════
